@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wqds
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wqds
+      #app.kubernetes.io/name: go-api
+  template:
+    metadata:
+      labels:
+        app: wqds
+        #app.kubernetes.io/name: go-api
+    spec:
+      containers:
+        - name: wqds
+          image: 259004456259.dkr.ecr.eu-west-2.amazonaws.com/wdqs:latest
+          ports:
+            - containerPort: 9999
+              name: wqds
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000

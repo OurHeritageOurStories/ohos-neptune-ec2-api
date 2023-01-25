@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wqds
+  labels:
+    app: wqds
+spec:
+  ports:
+    - port: 9999
+      name: wqds
+  clusterIP: None
+  selector:
+    app: wqds
+  #type: LoadBalancer
