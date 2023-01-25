@@ -6,7 +6,7 @@ metadata:
     app: go-api
 spec:
   ports:
-    - port: 8000
+    - port: 9090
       name: go-api
   clusterIP: None
   selector:

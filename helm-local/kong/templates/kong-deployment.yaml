@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: kong
-          image: 259004456259.dkr.ecr.eu-west-2.amazonaws.com/kong-alpine:kong-280-alpine
+          image: kong:alpine
           env:
             - name: KONG_DATABASE
               valueFrom:
@@ -64,7 +64,7 @@ spec:
                   name: kong-config
                   key: KONG_DECLARATIVE_CONFIG_KEY
           ports:
-            - containerPort: 5000
+            - containerPort: 8000
               name: proxy
             - containerPort: 8443
               name: proxy-ssl
