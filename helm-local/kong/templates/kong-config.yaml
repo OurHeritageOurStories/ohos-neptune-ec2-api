@@ -17,42 +17,16 @@ data:
 
     services:
 
-      - name: blazegraph-hello
-        url: https://blazegraph/bigdata/#splash
+      - name: blazegraph
+        url: http://blazegraph
         port: 8889
         routes:
-          - name: blazegraph-hello
+          - name: blazegraph
             paths:
-              - /graph/hello
+              - /graph
             strip_path: true
             methods:
               - GET       
-
-      - name: blazegraph-public-query
-        url: https://blazegraph/bigdata/sparql
-        port: 8889
-        routes:
-          - name: blazegraph-public
-            paths:
-              - /graph?
-            preserve_host: true
-            strip_path: true
-            methods:
-              - GET
-
-      - name: blazegraph-full-access
-        url: https://blazegraph/bigdata/sparql
-        port: 8889
-        routes:
-          - name: blazegraph-full-access
-            paths: 
-              - /graph-full-access?
-            preserve_host: true
-            strip_path: true
-            methods:
-              - GET
-              - POST
-              - DELETE
 
       - name: miiify
         url: https://miiify
@@ -61,6 +35,7 @@ data:
           - name: miiify
             paths:
               - /v1
+              - /goeff
               - /
             preserve_host: true
             methods:
