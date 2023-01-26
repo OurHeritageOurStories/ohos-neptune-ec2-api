@@ -1,25 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: http-echo
+  name: httpecho
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: http-echo
+      app: httpecho
       #app.kubernetes.io/name: go-api
   template:
     metadata:
       labels:
-        app: http-echo
+        app: httpecho
         #app.kubernetes.io/name: go-api
     spec:
       containers:
-        - name: http-echo
+        - name: httpecho
           image: hashicorp/http-echo
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5678
-              name: http-echo
+              name: httpecho
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000

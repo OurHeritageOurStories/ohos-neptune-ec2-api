@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: http-echo
+  name: httpecho
   labels:
-    app: http-echo
+    app: httpecho
 spec:
   ports:
     - port: 5678
-      name: http-echo
+      name: httpecho
   clusterIP: None
   selector:
-    app: http-echo
+    app: httpecho
   #type: LoadBalancer
