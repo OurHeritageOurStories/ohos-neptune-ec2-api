@@ -17,11 +17,11 @@ data:
 
     services:
 
-      - name: httpecho
-        url: http://httpecho
+      - name: http-echo
+        url: http://http-echo
         port: 5678
         routes:
-          - name: httpecho
+          - name: http-echo
             paths:
               - /echo
             strip_path: true
