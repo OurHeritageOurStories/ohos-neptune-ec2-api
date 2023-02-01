@@ -17,6 +17,19 @@ data:
 
     services:
 
+      - name: echotest
+        url: http://echotest
+        port: 5050
+        routes:
+          - name: echotest
+            paths:
+              - /testingthing
+            preserve_host: true
+            methods:
+              - GET
+              - HEAD
+              - OPTIONS
+      
       - name: http-echo
         url: http://http-echo
         port: 5678

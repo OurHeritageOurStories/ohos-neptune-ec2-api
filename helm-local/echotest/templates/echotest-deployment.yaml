@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echotest
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: echotest
+      #app.kubernetes.io/name: echotest
+  template:
+    metadata:
+      labels:
+        app: echotest
+        #app.kubernetes.io/name: echotest
+    spec:
+      containers:
+        - name: echotest
+          image: public.ecr.aws/j8z6n5u1/echotest:latest
+          ports:
+            - containerPort: 5050
+              name: echotest
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000

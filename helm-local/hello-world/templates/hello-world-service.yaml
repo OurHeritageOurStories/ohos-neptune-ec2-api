@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: http-echo
+  name: hello-world
   labels:
-    app: http-echo
+    app: hello-world
 spec:
   ports:
-    - port: 5678
-      name: http-echo
+    - port: 1
+      name: hello-world
   clusterIP: None
   selector:
-    app: http-echo
+    app: hello-world
   #type: LoadBalancer

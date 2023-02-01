@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+      #app.kubernetes.io/name: go-api
+  template:
+    metadata:
+      labels:
+        app: hello-world
+        #app.kubernetes.io/name: go-api
+    spec:
+      containers:
+        - name: hello-world
+          image: hello-world
+          #imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1
+              name: hello-world
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000

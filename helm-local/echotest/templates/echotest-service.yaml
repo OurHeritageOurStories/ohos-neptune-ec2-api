@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: echotest
+  labels:
+    app: echotest
+spec:
+  ports:
+    - port: 5050
+      name: echotest
+  clusterIP: None
+  selector:
+    app: echotest 
