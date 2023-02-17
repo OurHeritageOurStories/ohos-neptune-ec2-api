@@ -8,4 +8,4 @@ helm install echotest echotest
 
 sleep 60
 
-kubectl port-forward svc/kong 5000:5000 --address='0.0.0.0'
+kubectl port-forward svc/kong :5000 --address='0.0.0.0'
