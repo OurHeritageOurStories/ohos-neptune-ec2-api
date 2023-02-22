@@ -4,6 +4,44 @@ COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
 COPY *.go ./
-RUN go build -o /ohos-go-api
+RUN go build -o /ec2GoApi
 EXPOSE 9000
-CMD ["/ohos-go-api"]
+CMD ["/ec2GoApi"]
+
+#FROM golang:1.18-alpine
+#WORKDIR /app
+#COPY go.mod ./
+#COPY go.sum ./
+#RUN go mod download
+#COPY *.go ./
+#RUN go build -o /goapi
+#EXPOSE 9000
+#CMD ["/goapi"]
+
+#FROM golang:alpine
+
+#ENV GIN_MODE=release
+#ENV PORT=9000
+#WORKDIR /go/src/go-docker-dev.to/src
+#COPY templates /go/src/go-docker-dev.to/templates/
+#COPY depen
+
+#FROM golang:1.18-alpine#
+#
+#
+#RUN apk update && apk add alpine-sdk git && rm -rf /var/cache/apk/*#
+
+#RUN mkdir -p /api
+#WORKDIR /api
+
+#COPY go.mod .
+#COPY go.sum .
+#RUN go mod download
+
+#COPY . .
+#RUN go build -o ./app ./main.go
+
+
+#E#XPOSE 9000
+
+#ENTRYPOINT ["./app"]
