@@ -25,6 +25,7 @@ data:
             paths:
               - /api
             preserve_host: true
+            strip_path: true
             methods:
               - GET
 
