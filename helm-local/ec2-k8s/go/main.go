@@ -1,43 +1,30 @@
 package main
 
 import (
-	"io"
+	"bytes"
+	"io/ioutil"
+	"log"
 	"net/http"
-	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func requestToNeptune(c echo.Context) error {
-	// Get name
-	name := c.FormValue("name")
-	// Get avatar
-	avatar, err := c.FormFile("avatar")
+
+	sparqlString := c.FormValue("name")
+	returnRDF := bytes.NewBuffer([]byte(sparqlString))
+	resp, err := http.Post("https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", "data-binary", returnRDF)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-
-	// Source
-	src, err := avatar.Open()
-	if err != nil {
-		return err
+	defer resp.Body.Close()
+	body, err2 := ioutil.ReadAll(resp.Body)
+	if err2 != nil {
+		log.Fatal(err)
 	}
-	defer src.Close()
-
-	// Destination
-	dst, err := os.Create(avatar.Filename)
-	if err != nil {
-		return err
-	}
-	defer dst.Close()
-
-	// Copy
-	if _, err = io.Copy(dst, src); err != nil {
-		return err
-	}
-
-	return c.HTML(http.StatusOK, "<b>Thank you! "+name+"</b>")
+	sb := string(body)
+	return c.String(http.StatusOK, sb)
 }
 
 func main() {
