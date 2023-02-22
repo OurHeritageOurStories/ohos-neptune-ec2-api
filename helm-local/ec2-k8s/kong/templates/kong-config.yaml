@@ -23,7 +23,7 @@ data:
         routes:
           - name: goapi
             paths:
-              - /
+              - /api
             preserve_host: true
             methods:
               - GET
