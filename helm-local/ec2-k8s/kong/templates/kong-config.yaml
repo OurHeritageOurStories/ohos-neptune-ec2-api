@@ -28,6 +28,7 @@ data:
             strip_path: true
             methods:
               - GET
+              - POST
 
     plugins:
     - name: cors
