@@ -4,6 +4,6 @@ COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
 COPY *.go ./
-RUN go build -o /ohos-go-api
+RUN go build -o /ec2GoApi
 EXPOSE 9000
-CMD ["/ohos-go-api"]
+CMD ["/ec2GoApi"]
