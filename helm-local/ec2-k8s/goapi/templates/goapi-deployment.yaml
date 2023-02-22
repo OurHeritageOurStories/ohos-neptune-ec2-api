@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: goapi
-          image: 
+          image: goapi
           ports:
             - containerPort: 9000
               name: goapi
