@@ -1,7 +1,3 @@
-cd go
-docker build -t goapi .
-cd ../
-
 minikube start
 
 helm install kong kong --set service.port=5000

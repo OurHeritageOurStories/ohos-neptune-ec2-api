@@ -31,7 +31,7 @@ func testActive(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
-	router.POST("/", requestToNeptune)
-	router.GET("/test", testActive)
+	router.POST("/other", requestToNeptune)
+	router.GET("/helloTest", testActive)
 	router.Run("localhost:9000")
 }
