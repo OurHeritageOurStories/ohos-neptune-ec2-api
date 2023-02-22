@@ -33,7 +33,7 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/hello", func(c echo.Context) error {
+	e.GET("/", func(c echo.Context) error {
 		return c.HTML(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
 	})
 
