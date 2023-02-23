@@ -12,8 +12,12 @@ import (
 
 func requestToNeptune(c echo.Context) error {
 
-	sparqlString := c.FormValue("name")
-	returnRDF := bytes.NewBuffer([]byte(sparqlString))
+	//sparqlString := c.FormValue("sqarqlstring")
+	//sparqlString := "hi"
+	//return c.String(http.StatusOK, sparqlString)
+	sparqlString := c.FormValue("sqarqlstring")
+	constructedSparqlQuery := "query=select " + sparqlString
+	returnRDF := bytes.NewBuffer([]byte(constructedSparqlQuery))
 	resp, err := http.Post("https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", "data-binary", returnRDF)
 	if err != nil {
 		log.Fatal(err)
@@ -24,7 +28,7 @@ func requestToNeptune(c echo.Context) error {
 		log.Fatal(err)
 	}
 	sb := string(body)
-	return c.String(http.StatusOK, sb)
+	return c.String(http.StatusOK, constructedSparqlQuery+": "+sb)
 }
 
 func main() {
