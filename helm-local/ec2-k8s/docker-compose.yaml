@@ -24,7 +24,7 @@ services:
   
   goapi:
     image: public.ecr.aws/j8z6n5u1/data-go-api:latest
-    hostname: echotest
-    container_name: echotest
+    hostname: goapi
+    container_name: goapi
     ports:
       - "9000:9000"
