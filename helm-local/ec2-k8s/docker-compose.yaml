@@ -27,6 +27,6 @@ services:
     hostname: goapi
     container_name: goapi
     env_file:
-    - local.env
+      - .env
     ports:
       - "9000:9000"

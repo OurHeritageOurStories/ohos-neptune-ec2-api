@@ -1,0 +1,11 @@
+curl -X POST -H 'Content-Type: application/json' https://ohos-live-data-neptune.cluster-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/loader -d '
+{
+"source" : "s3://ohos-live-data-bucket/ohos-live-data-test.ttl",
+"format" : "turtle",
+"iamRoleArn" : "arn:aws:iam::259004456259:role/ohos-live-data-to-neptune-from-s3-read-only",
+"region" : "eu-west-2",
+"failOnError" : "FALSE",
+"parallelism" : "MEDIUM",
+"updateSingleCardinalityProperties" : "FALSE",
+"queueRequest" : "TRUE"
+}'
