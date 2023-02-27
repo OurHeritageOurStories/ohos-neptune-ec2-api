@@ -1,0 +1,72 @@
+##
+## Load data. Replace the source with a new file in the same bucket to update the data
+## 
+
+curl -X POST \
+-H 'Content-Type: application/json' \
+https://ohos-live-data-neptune.cluster-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/loader -d '
+{
+"source" : "s3://ohos-live-data-bucket/ohos-live-data-test.ttl",
+"format" : "turtle",
+"iamRoleArn" : "arn:aws:iam::259004456259:role/ohos-live-data-to-neptune-from-s3-read-only",
+"region" : "eu-west-2",
+"failOnError" : "FALSE",
+"parallelism" : "MEDIUM",
+"updateSingleCardinalityProperties" : "FALSE",
+"queueRequest" : "TRUE"
+}'
+
+
+##
+## Empty the database (step 1). Running this command returns json with a token. This token is required for step 2. 
+##
+
+curl -X POST \
+  -H 'Content-Type: application/json' \
+      https://ohos-live-data-neptune.cluster-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/system \
+  -d '{ "action" : "initiateDatabaseReset" }'
+  
+##
+## Empty the database (step 2). This is the command that actually deletes the data. Token is required from step 1. 
+##  
+  
+  curl -X POST \
+  -H 'Content-Type: application/json' \
+      https://ohos-live-data-neptune.cluster-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/system \
+  -d '{
+        "action" : "performDatabaseReset",
+        "token" : "9cc341de-24d4-cbb3-bc96-c7af2e27ff3c"
+      }'
+      
+      
+##
+## Command that can be run to check whether data have been uploaded properly. 
+##      
+      
+      curl -X POST --data-binary 'query=select ?s ?p ?o where {?s ?p ?o} limit 10' https://ohos-live-data-neptune.cluster-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql
+
+
+##
+## Send the config to Kong
+##
+
+curl --request POST \
+  --url http://localhost:8001/config \
+  --header 'Content-Type: text/yaml' \
+  --data '_format_version: "2.1"
+_transform: true
+
+services: 
+
+  - name: goapi
+    url: http://goapi:9000/
+    routes:
+      - name: goapi
+        paths:
+          - /
+        preserve_host: true
+        strip_path: true
+        methods:
+          - GET
+          - POST
+  '
