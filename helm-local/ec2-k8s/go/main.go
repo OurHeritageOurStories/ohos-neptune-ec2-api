@@ -11,8 +11,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-
-	"github.com/joho/godotenv"
 )
 
 func requestToNeptune(c echo.Context) error {
@@ -66,14 +64,15 @@ func requestToNeptune(c echo.Context) error {
 	}
 	defer resp.Body.Close()
 	data, _ := ioutil.ReadAll(resp.Body)
-	return c.String(http.StatusOK, string(data))
+	return c.String(http.StatusOK, "limit: "+strconv.Itoa(limitToUse)+"  sparql: "+sparqlString+string(data))
 }
 
 func main() {
-	err := godotenv.Load("local.env")
-	if err != nil {
-		log.Fatalf("Something went wrong loading the env file")
-	}
+	//fmt.Printf(os.Getenv("TEST"))
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	log.Fatalf("Something went wrong loading the env file")
+	//}
 
 	e := echo.New()
 
