@@ -17,6 +17,8 @@ func requestToNeptune(c echo.Context) error {
 
 	sparqlString := c.FormValue("sparqlstring")
 
+	prefixString := c.FormValue("prefixSet")
+
 	limit := c.FormValue("limit")
 	limitInt, err := strconv.Atoi(limit)
 	if err != nil {
@@ -37,7 +39,7 @@ func requestToNeptune(c echo.Context) error {
 	}
 
 	params := url.Values{}
-	params.Add("query", "select "+sparqlString+" limit "+strconv.Itoa(limitToUse)) //stick everything together nicely to make the actual Neptune request
+	params.Add("query", prefixString+"select "+sparqlString+" limit "+strconv.Itoa(limitToUse)) //stick everything together nicely to make the actual Neptune request
 	body := strings.NewReader(params.Encode())
 
 	req, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
