@@ -31,9 +31,12 @@ paths:
                   type: string
                 limit:
                   type: string
+                prefixString:
+                  type: string
                 required:
                   - sparqlstring
                   - limit
+                  - prefixString
       responses:
         "200":
           description: OK
