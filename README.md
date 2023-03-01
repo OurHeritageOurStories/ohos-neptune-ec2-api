@@ -15,8 +15,9 @@ The blank endpoint acts as a test, to ensure that the AP I is running and availa
 The /sparql endpoint takes two arguments: 
 - `sparqlstring=` This requires a partial sparql query, starting from the variables, and ending after the final “}”. 
 - `limit=` This is a required variable, and takes a number between 1 and 10,000.
+- `prefixString=` Also required, takes a string with the format "PREFIX ex: <http://example.com/exampleOntology#>" (See [this](https://en.wikipedia.org/wiki/SPARQL) page for examples of prefixes)
 
-A valid query, for example, is `curl -d "sparqlstring= ?s ?p ?o where {?s ?p ?o}" -d "limit=10" ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/sparql` or 'http --form POST ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/sparql 'sparqlstring= ?s ?p ?o where {?s ?p ?o}' limit=10' depending on whether you prefer to use curl or httpie.
+A valid query, for example, is `curl -d "sparqlstring= ?s ?p ?o where {?s ?p ?o}" -d "limit=10" ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/sparql` or `http --form POST ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/sparql 'sparqlstring= ?s ?p ?o where {?s ?p ?o}' limit=10` depending on whether you prefer to use curl or httpie.
 
 The API then returns the data from Neptune un-modified. 
 
