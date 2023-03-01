@@ -17,7 +17,7 @@ func requestToNeptune(c echo.Context) error {
 
 	sparqlString := c.FormValue("sparqlstring")
 
-	prefixString := c.FormValue("prefixSet")
+	prefixString := c.FormValue("prefixString")
 
 	limit := c.FormValue("limit")
 	limitInt, err := strconv.Atoi(limit)
@@ -54,7 +54,7 @@ func requestToNeptune(c echo.Context) error {
 	}
 	defer resp.Body.Close()
 	data, _ := ioutil.ReadAll(resp.Body)
-	return c.String(http.StatusOK, "limit: "+strconv.Itoa(limitToUse)+"  sparql: "+sparqlString+string(data))
+	return c.String(http.StatusOK, "prefix: "+prefixString+"	limit: "+strconv.Itoa(limitToUse)+"	sparql: "+sparqlString+string(data))
 }
 
 func main() {
