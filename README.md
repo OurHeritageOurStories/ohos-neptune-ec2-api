@@ -18,7 +18,7 @@ The /sparql endpoint takes two arguments:
 
 A valid query, for example, is `curl -d "sparqlquery= select ?s ?p ?o where {?s ?p ?o}" -d "limit=10" ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/sparql` 
 
-The API then returns the data from Neptune, with the paramters supplied in the command as a sanity-check. 
+The API then returns the data from Neptune. 
 
 
 
