@@ -13,11 +13,10 @@ The Go API has two endpoints:
 The blank endpoint acts as a test, to ensure that the AP I is running and available. 
 
 The /sparql endpoint takes two arguments: 
-- `sparqlstring=` This requires a partial sparql query, starting from the variables, and ending after the final “}”. 
+- `sparqlquery=` This requires a sparql query, and will only accept read-only ones (e.g. select, sort, etc)
 - `limit=` This is a required variable, and takes a number between 1 and 10,000.
-- `prefixString=` Also required, takes a string with the format "PREFIX ex: <http://example.com/exampleOntology#>" (See [this](https://en.wikipedia.org/wiki/SPARQL) page for examples of prefixes)
 
-A valid query, for example, is `curl -d "sparqlstring= ?s ?p ?o where {?s ?p ?o}" -d "limit=10" -d "prefixString=PREFIX ex: <http://example.com/exampleOntology#>" ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/sparql` 
+A valid query, for example, is `curl -d "sparqlquery= select ?s ?p ?o where {?s ?p ?o}" -d "limit=10" ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/sparql` 
 
 The API then returns the data from Neptune, with the paramters supplied in the command as a sanity-check. 
 

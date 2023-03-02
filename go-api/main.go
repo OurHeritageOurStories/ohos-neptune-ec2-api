@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 
@@ -14,10 +13,7 @@ import (
 )
 
 func requestToNeptune(c echo.Context) error {
-
-	sparqlString := c.FormValue("sparqlstring")
-
-	prefixString := c.FormValue("prefixString")
+	sparqlString := c.FormValue("sparqlquery")
 
 	limit := c.FormValue("limit")
 	limitInt, err := strconv.Atoi(limit)
@@ -25,21 +21,17 @@ func requestToNeptune(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Limit needs to be a number")
 	}
 
-	maxLimit := os.Getenv("LIMIT")
-	maxLimitInt, err2 := strconv.Atoi(maxLimit)
-	if err2 != nil {
-		return c.String(http.StatusInternalServerError, "Max limit not a number")
-	}
-
+	params := url.Values{}
 	var limitToUse int
-	if limitInt > maxLimitInt {
-		limitToUse = maxLimitInt
+	if limitInt > 10000 {
+		limitToUse = 10000
 	} else {
 		limitToUse = limitInt
 	}
 
-	params := url.Values{}
-	params.Add("query", prefixString+"select "+sparqlString+" limit "+strconv.Itoa(limitToUse)) //stick everything together nicely to make the actual Neptune request
+	constructedQuery := sparqlString + " LIMIT " + strconv.Itoa(limitToUse)
+
+	params.Add("query", constructedQuery)
 	body := strings.NewReader(params.Encode())
 
 	req, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
@@ -54,7 +46,7 @@ func requestToNeptune(c echo.Context) error {
 	}
 	defer resp.Body.Close()
 	data, _ := ioutil.ReadAll(resp.Body)
-	return c.String(http.StatusOK, "prefix: "+prefixString+"	limit: "+strconv.Itoa(limitToUse)+"	sparql: "+sparqlString+string(data))
+	return c.String(http.StatusOK, "Search query"+sparqlString+"	Constructed query: "+constructedQuery+"	Results: "+string(data))
 }
 
 func main() {
