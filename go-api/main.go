@@ -22,8 +22,6 @@ func requestToNeptune(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "Limit needs to be a number")
 	}
 
-	params := url.Values{}
-
 	maxLimit := os.Getenv("LIMIT")
 	maxLimitInt, err2 := strconv.Atoi(maxLimit)
 	if err2 != nil {
@@ -39,6 +37,7 @@ func requestToNeptune(c echo.Context) error {
 
 	constructedQuery := sparqlString + " LIMIT " + strconv.Itoa(limitToUse)
 
+	params := url.Values{}
 	params.Add("query", constructedQuery)
 	body := strings.NewReader(params.Encode())
 
