@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,6 +15,7 @@ import (
 )
 
 func requestToNeptune(c echo.Context) error {
+
 	sparqlString := c.FormValue("sparqlquery")
 
 	limit := c.FormValue("limit")
@@ -51,9 +53,16 @@ func requestToNeptune(c echo.Context) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer resp.Body.Close()
+
 	data, _ := ioutil.ReadAll(resp.Body)
-	return c.String(http.StatusOK, "Search query"+sparqlString+"	Constructed query: "+constructedQuery+"	Results: "+string(data))
+
+	var jsonMap map[string]interface{}
+
+	json.Unmarshal([]byte(data), &jsonMap)
+
+	return c.JSON(http.StatusOK, jsonMap)
 }
 
 func main() {
