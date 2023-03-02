@@ -28,3 +28,6 @@ Also included in this repo are:
 - The commands to load an unload data.
 
 Note that the commands to send Kong the config, and to load and unload data need the user to be SSH’d into the EC2. The instructions for this are not here for security. 
+
+Distinguish from other services: 
+In order to distinguish this API from others in the OHOS system, this one is called [Nisaba!](https://en.wikipedia.org/wiki/Nisaba) The Goddess of Harvest seemed appropriate for an API with the task of gathering data from the source. 
