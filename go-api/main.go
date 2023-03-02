@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 
@@ -22,9 +23,16 @@ func requestToNeptune(c echo.Context) error {
 	}
 
 	params := url.Values{}
+
+	maxLimit := os.Getenv("LIMIT")
+	maxLimitInt, err2 := strconv.Atoi(maxLimit)
+	if err2 != nil {
+		return c.String(http.StatusInternalServerError, "Max limit not a number")
+	}
+
 	var limitToUse int
-	if limitInt > 10000 {
-		limitToUse = 10000
+	if limitInt > maxLimitInt {
+		limitToUse = maxLimitInt
 	} else {
 		limitToUse = limitInt
 	}
