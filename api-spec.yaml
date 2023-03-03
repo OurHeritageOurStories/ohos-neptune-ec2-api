@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: OHOS Neptune EC2 api
+servers:
+  - url: ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000
+paths:
+  /:
+    get:
+      description: Test 
+      responses:
+        '200':
+          description: Conformation the API is alive
+          content:
+            application/json:
+              schema:
+                type: object 
+                properties:           
+                  message:
+                    type: string
+  /sparql:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sparqlstring:
+                  type: string
+                limit:
+                  type: string
+                required:
+                  - sparqlstring
+                  - limit
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  head:
+                    type: String array
+                    example: "vars" : [ "s", "p", "o" ]
+                    desciption: The variables the agent submitting the query requested
+                  results:
+                    type: Json array
+                    example: "bindings" : [ {"s" : {"type" : "uri","value" : "http://example.comNLS201030"},"p" : {"type" : "uri", "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"o" : {"type" : "uri","value" : "http://www.loc.gov/premis/rdf/v3/IntellectualEntity"}}
+                    desciption: The content returned from the search
+        "400":
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Something went wrong!
+        "500":
+          description: Internal Server Error
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Something went wrong!
+

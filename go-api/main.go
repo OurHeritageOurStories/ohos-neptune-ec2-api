@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,7 +16,7 @@ import (
 
 func requestToNeptune(c echo.Context) error {
 
-	sparqlString := c.FormValue("sparqlstring")
+	sparqlString := c.FormValue("sparqlquery")
 
 	limit := c.FormValue("limit")
 	limitInt, err := strconv.Atoi(limit)
@@ -36,8 +37,10 @@ func requestToNeptune(c echo.Context) error {
 		limitToUse = limitInt
 	}
 
+	constructedQuery := sparqlString + " LIMIT " + strconv.Itoa(limitToUse)
+
 	params := url.Values{}
-	params.Add("query", "select "+sparqlString+" limit "+strconv.Itoa(limitToUse)) //stick everything together nicely to make the actual Neptune request
+	params.Add("query", constructedQuery)
 	body := strings.NewReader(params.Encode())
 
 	req, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
@@ -50,9 +53,16 @@ func requestToNeptune(c echo.Context) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer resp.Body.Close()
+
 	data, _ := ioutil.ReadAll(resp.Body)
-	return c.String(http.StatusOK, "limit: "+strconv.Itoa(limitToUse)+"  sparql: "+sparqlString+string(data))
+
+	var jsonMap map[string]interface{}
+
+	json.Unmarshal([]byte(data), &jsonMap)
+
+	return c.JSON(http.StatusOK, jsonMap)
 }
 
 func main() {
