@@ -97,103 +97,86 @@ func fetchDiscovery(c echo.Context) error {
 
 	json.Unmarshal([]byte(responseData), &jsonMap)
 
-	return c.JSON(http.StatusOK, jsonMap)
+	return c.JSONPretty(http.StatusOK, jsonMap, " ")
 }
 
+/*
 func getEntities(c echo.Context) error {
-	//	keyword := c.Request().URL.Query().Get("keyword")
-	//	//page := strings.ToUpper(c.Request().URL.Query().Get("page"))
-	//	page := c.Request().URL.Query().Get("page")
-
-	//keyword := c.QueryParam("keyword\n")
-	//page := c.QueryParam("page\n")
-
-	//queryParams := c.Request().URL.Query()
-	//fmt.Println(len(queryParams))
-	//for i, s := range queryParams {
-	//	fmt.Println(i, s)
-	//}
-	//keyword := queryParams.Get("keyword")
-	//page := queryParams.Get("page")
-
-	//keyword := queryParams["keyword"]
-	//pagething := queryParams["thingiy"]
-	//pagething := queryParams.Get("thingiy")
-
-	//fmt.Print("keyword" + strings.Join(keyword, " "))
-	//fmt.Print("page" + strings.Join(pagething, " "))
-	//pagethingalt := strings.Join(pagething, " ")
-	//return c.String(http.StatusOK, pagething)
 
 	keyword := c.QueryParam("keyword")
 	page := c.QueryParam("page")
-	fmt.Println(keyword)
-	fmt.Println(page)
-	return c.String(http.StatusOK, "keyword -> "+keyword+"   | page -> "+page)
-	/*
-		off, err := strconv.Atoi(page)
 
-		if err != nil {
-			log.Fatal(err)
-		}
+	off, err := strconv.Atoi(page)
 
-		off = max(1, off)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		o := strconv.Itoa((off - 1) * 10)
+	off = max(1, off)
 
-		constructedQuery := "prefix tanc: <http://tanc.manchester.ac.uk/> SELECT DISTINCT ?o (count(?text) as ?count) WHERE { ?s <http://tanc.manchester.ac.uk/text> ?text. ?s tanc:mentions ?o FILTER (regex(str(?o), '" + keyword + "', 'i'))} GROUP BY ?o ORDER BY DESC(?count) OFFSET " + o + " LIMIT 10"
+	o := strconv.Itoa((off - 1) * 10)
 
-		params := url.Values{}
-		params.Add("query", constructedQuery)
-		body := strings.NewReader(params.Encode())
+	constructedQuery := "prefix tanc: <http://tanc.manchester.ac.uk/> SELECT DISTINCT ?o (count(?text) as ?count) WHERE { ?s <http://tanc.manchester.ac.uk/text> ?text. ?s tanc:mentions ?o FILTER (regex(str(?o), '" + keyword + "', 'i'))} GROUP BY ?o ORDER BY DESC(?count) OFFSET " + o + " LIMIT 10"
 
-		response, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
+	// updated curl -X POST --data-binary 'query= prefix schema: <https://schema.org/> prefix ver:   <http://purl.org/linked-data/version#> prefix xsd:   <http://www.w3.org/2001/XMLSchema#> prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> prefix edm:   <http://www.europeana.eu/schemas/edm/> prefix rst:   <http://id.loc.gov/vocabulary/relationshipSubType/> prefix rdau:  <http://rdaregistry.info/Elements/u/> prefix dct:   <http://purl.org/dc/terms/> prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> prefix cat:   <http://cat.nationalarchives.gov.uk/> prefix time:  <http://www.w3.org/2006/time#> prefix odrl:  <http://www.w3.org/ns/odrl/2/> prefix prov:  <http://www.w3.org/ns/prov#> prefix iso639-2: <http://id.loc.gov/vocabulary/iso639-2/> select distinct ?o (count(?text) as ?count) where {?s dct:abstract ?text .?s dct:abstract ?o filter (regex(str(?o), "part", "i"))}group by ?o order by desc(?count) offset 3 limit 10' https://ohos-live-data-neptune.cluster-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql
 
-		if err != nil {
-			fmt.Print(err.Error())
-			fmt.Print("aaaahhhh")
-			os.Exit(1)
-		}
+	//constructedQuery := "prefix schema: <https://schema.org/> prefix ver:   <http://purl.org/linked-data/version#> prefix xsd:   <http://www.w3.org/2001/XMLSchema#> prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> prefix edm:   <http://www.europeana.eu/schemas/edm/> prefix rst:   <http://id.loc.gov/vocabulary/relationshipSubType/> prefix rdau:  <http://rdaregistry.info/Elements/u/> prefix dct:   <http://purl.org/dc/terms/> prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> prefix cat:   <http://cat.nationalarchives.gov.uk/> prefix time:  <http://www.w3.org/2006/time#> prefix odrl:  <http://www.w3.org/ns/odrl/2/> prefix prov:  <http://www.w3.org/ns/prov#> prefix iso639-2: <http://id.loc.gov/vocabulary/iso639-2/> select distinct ?o (count(?text) as ?count) where {?s dct:abstract ?text .?s dct:abstract ?o filter (regex(str(?o), " + keyword + ", 'i'))}group by ?o order by desc(?count) offset " + o + " limit 10"
 
-		responseData, err := ioutil.ReadAll(response.Body)
+	params := url.Values{}
+	params.Add("query", constructedQuery)
+	body := strings.NewReader(params.Encode())
 
-		constructedQueryTwo := "prefix tanc: <http://tanc.manchester.ac.uk/> SELECT (count(*) as ?count) WHERE {SELECT DISTINCT ?o (count(?text) as ?count) WHERE { ?s <http://tanc.manchester.ac.uk/text> ?text. ?s tanc:mentions ?o FILTER (regex(str(?o), '" + keyword + "', 'i'))} GROUP BY ?o ORDER BY DESC(?count)}"
+	response, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
 
-		params2 := url.Values{}
-		params2.Add("query", constructedQueryTwo)
-		body2 := strings.NewReader(params2.Encode())
+	if err != nil {
+		fmt.Print(err.Error())
+		fmt.Print("aaaahhhh")
+		os.Exit(1)
+	}
 
-		response2, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body2)
+	responseData, err := ioutil.ReadAll(response.Body)
 
-		if err != nil {
-			fmt.Print(err.Error())
-			fmt.Print("eeeek")
-			os.Exit(1)
-		}
+	//constructedQueryTwo := "prefix tanc: <http://tanc.manchester.ac.uk/> SELECT (count(*) as ?count) WHERE {SELECT DISTINCT ?o (count(?text) as ?count) WHERE { ?s <http://tanc.manchester.ac.uk/text> ?text. ?s tanc:mentions ?o FILTER (regex(str(?o), '" + keyword + "', 'i'))} GROUP BY ?o ORDER BY DESC(?count)}"
 
-		responseData2, err := ioutil.ReadAll(response2.Body)
+	//curl -X POST --data-binary 'query= prefix schema: <https://schema.org/> prefix ver:   <http://purl.org/linked-data/version#> prefix xsd:   <http://www.w3.org/2001/XMLSchema#> prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> prefix edm:   <http://www.europeana.eu/schemas/edm/> prefix rst:   <http://id.loc.gov/vocabulary/relationshipSubType/> prefix rdau:  <http://rdaregistry.info/Elements/u/> prefix dct:   <http://purl.org/dc/terms/> prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> prefix cat:   <http://cat.nationalarchives.gov.uk/> prefix time:  <http://www.w3.org/2006/time#> prefix odrl:  <http://www.w3.org/ns/odrl/2/> prefix prov:  <http://www.w3.org/ns/prov#> prefix iso639-2: <http://id.loc.gov/vocabulary/iso639-2/> SELECT (count(*) as ?count) WHERE {SELECT DISTINCT ?o (count(?text) as ?count) WHERE { ?s dct:abstract ?text. ?s dct:abstract ?o FILTER (regex(str(?o), "part", "i"))} GROUP BY ?o ORDER BY DESC(?count)}' https://ohos-live-data-neptune.cluster-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql
 
-		if err != nil {
-			log.Fatal(err)
-		}
+	//constructedQueryTwo := "prefix schema: <https://schema.org/> prefix ver:   <http://purl.org/linked-data/version#> prefix xsd:   <http://www.w3.org/2001/XMLSchema#> prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> prefix edm:   <http://www.europeana.eu/schemas/edm/> prefix rst:   <http://id.loc.gov/vocabulary/relationshipSubType/> prefix rdau:  <http://rdaregistry.info/Elements/u/> prefix dct:   <http://purl.org/dc/terms/> prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> prefix cat:   <http://cat.nationalarchives.gov.uk/> prefix time:  <http://www.w3.org/2006/time#> prefix odrl:  <http://www.w3.org/ns/odrl/2/> prefix prov:  <http://www.w3.org/ns/prov#> prefix iso639-2: <http://id.loc.gov/vocabulary/iso639-2/> SELECT (count(*) as ?count) WHERE {SELECT DISTINCT ?o (count(?text) as ?count) WHERE { ?s dct:abstract ?text. ?s dct:abstract ?o FILTER (regex(str(?o), " + keyword + ", 'i'))} GROUP BY ?o ORDER BY DESC(?count)}"
 
-		out := map[string]interface{}{}
-		json.Unmarshal([]byte(responseData), &out)
+	params2 := url.Values{}
+	params2.Add("query", constructedQueryTwo)
+	body2 := strings.NewReader(params2.Encode())
 
-		out2 := map[string]interface{}{}
-		json.Unmarshal([]byte(responseData2), &out2)
+	response2, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body2)
 
-		out["count"] = out2
+	if err != nil {
+		fmt.Print(err.Error())
+		fmt.Print("eeeek")
+		os.Exit(1)
+	}
 
-		outputJSON, _ := json.Marshal(out)
+	responseData2, err := ioutil.ReadAll(response2.Body)
 
-		var jsonMap map[string]interface{}
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		json.Unmarshal([]byte(outputJSON), &jsonMap)
+	out := map[string]interface{}{}
+	json.Unmarshal([]byte(responseData), &out)
 
-		return c.JSON(http.StatusOK, jsonMap)*/
+	out2 := map[string]interface{}{}
+	json.Unmarshal([]byte(responseData2), &out2)
+
+	out["count"] = out2
+
+	outputJSON, _ := json.Marshal(out)
+
+	var jsonMap map[string]interface{}
+
+	json.Unmarshal([]byte(outputJSON), &jsonMap)
+
+	return c.JSON(http.StatusOK, jsonMap)
 }
-
+*/
 func getEntity(c echo.Context) error {
 	entity := c.Request().URL.Query().Get("entity")
 	//page := strings.ToUpper(c.Request().URL.Query().Get("page"))
@@ -258,6 +241,86 @@ func getEntity(c echo.Context) error {
 
 }
 
+func movingImages(c echo.Context) error {
+	keyword := c.QueryParam("keyword")
+	page := c.QueryParam("page")
+
+	off, err := strconv.Atoi(page)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	off = max(1, off)
+
+	o := strconv.Itoa((off - 1) * 10)
+
+	constructedQuery := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by ?title OFFSET " + o + " LIMIT 10"
+	return c.String(http.StatusTeapot, constructedQuery)
+	/*
+		params := url.Values{}
+		params.Add("query", constructedQuery)
+		body := strings.NewReader(params.Encode())
+
+		req, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer resp.Body.Close()
+
+		data, _ := ioutil.ReadAll(resp.Body)
+
+		var jsonMap map[string]interface{}
+
+		json.Unmarshal([]byte(data), &jsonMap)
+
+		return c.JSONPretty(http.StatusOK, jsonMap, " ")*/
+}
+
+/*
+	response, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	responseData, err := ioutil.ReadAll(response.Body)
+
+	returnString := string(responseData)
+
+	return c.String(http.StatusTeapot, returnString)
+
+	//var jsonMap map[string]interface{}
+
+	//json.Unmarshal(responseData, &jsonMap)
+
+	//return c.JSON(http.StatusOK, jsonMap)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+
+	//respneded, err := json.Marshal(responseData)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+
+	//return c.JSON(http.StatusOK, respneded)
+
+	//var jsonMap map[string]interface{}
+
+	//json.Unmarshal([]byte(responseData), &jsonMap)
+
+	//return c.Stringhttp.StatusOK, responseData)
+	//return c.JSONPretty(http.StatusOK, jsonMap, " ")
+}*/
+
 func entitytest(c echo.Context) error {
 	team := c.QueryParam("team")
 	member := c.QueryParam("member")
@@ -279,9 +342,11 @@ func main() {
 
 	e.GET("/discovery", fetchDiscovery)
 
-	e.GET("/entities", getEntities)
+	//e.GET("/entities", getEntities)
 
 	e.GET("/testentities", entitytest)
+
+	e.GET("/movingImages", movingImages)
 
 	//e.GET("/entities/{entity}", getEntity)
 
