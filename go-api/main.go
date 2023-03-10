@@ -274,7 +274,7 @@ func movingImages(c echo.Context) error {
 
 	defer resp.Body.Close()
 
-	constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
+	/*constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
 
 	paramsCount := url.Values{}
 	paramsCount.Add("query", constructedQueryCount)
@@ -305,25 +305,25 @@ func movingImages(c echo.Context) error {
 
 	output, _ := json.Marshal(out)
 	//return c.String(http.StatusTeapot, string(output))
-	return c.JSONPretty(http.StatusOK, output, " ")
-	/*
-		defer respCount.Body.Close()
+	return c.JSONPretty(http.StatusOK, output, " ")*/
 
-		data, _ := ioutil.ReadAll(resp.Body)
+	//defer respCount.Body.Close()
 
-		dataCount, _ := ioutil.ReadAll(respCount.Body)
+	data, _ := ioutil.ReadAll(resp.Body)
 
-		var jsonMap map[string]interface{}
+	//dataCount, _ := ioutil.ReadAll(respCount.Body)
 
-		json.Unmarshal([]byte(data), &jsonMap)
+	var jsonMap map[string]interface{}
 
-		var jsonMapCount map[string]interface{}
+	json.Unmarshal([]byte(data), &jsonMap)
 
-		json.Unmarshal([]byte(dataCount), &jsonMapCount)
+	//var jsonMapCount map[string]interface{}
 
-		jsonMap["count"] = jsonMapCount
+	//json.Unmarshal([]byte(dataCount), &jsonMapCount)
 
-		return c.JSONPretty(http.StatusOK, jsonMap, " ")*/
+	//jsonMap["count"] = jsonMapCount
+
+	return c.JSONPretty(http.StatusOK, jsonMap, " ")
 }
 
 /*
