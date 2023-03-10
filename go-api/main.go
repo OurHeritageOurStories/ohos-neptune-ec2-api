@@ -256,30 +256,72 @@ func movingImages(c echo.Context) error {
 	o := strconv.Itoa((off - 1) * 10)
 
 	constructedQuery := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by ?title OFFSET " + o + " LIMIT 10"
-	return c.String(http.StatusTeapot, constructedQuery)
+
+	params := url.Values{}
+	params.Add("query", constructedQuery)
+	body := strings.NewReader(params.Encode())
+
+	req, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer resp.Body.Close()
+
+	constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
+
+	paramsCount := url.Values{}
+	paramsCount.Add("query", constructedQueryCount)
+	bodyCount := strings.NewReader(paramsCount.Encode())
+
+	reqCount, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", bodyCount)
+	if err != nil {
+		log.Fatal(err)
+	}
+	reqCount.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	respCount, err := http.DefaultClient.Do(reqCount)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	response, _ := ioutil.ReadAll(resp.Body)
+
+	responseCount, _ := ioutil.ReadAll(respCount.Body)
+
+	out := map[string]interface{}{}
+	json.Unmarshal([]byte(response), &out)
+
+	outCount := map[string]interface{}{}
+	json.Unmarshal([]byte(responseCount), &outCount)
+
+	out["count"] = outCount
+
+	output, _ := json.Marshal(out)
+	//return c.String(http.StatusTeapot, string(output))
+	return c.JSONPretty(http.StatusOK, output, " ")
 	/*
-		params := url.Values{}
-		params.Add("query", constructedQuery)
-		body := strings.NewReader(params.Encode())
-
-		req, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
-		if err != nil {
-			log.Fatal(err)
-		}
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		defer resp.Body.Close()
+		defer respCount.Body.Close()
 
 		data, _ := ioutil.ReadAll(resp.Body)
+
+		dataCount, _ := ioutil.ReadAll(respCount.Body)
 
 		var jsonMap map[string]interface{}
 
 		json.Unmarshal([]byte(data), &jsonMap)
+
+		var jsonMapCount map[string]interface{}
+
+		json.Unmarshal([]byte(dataCount), &jsonMapCount)
+
+		jsonMap["count"] = jsonMapCount
 
 		return c.JSONPretty(http.StatusOK, jsonMap, " ")*/
 }
@@ -333,6 +375,10 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+	}))
 
 	e.GET("/", func(c echo.Context) error { //make sure its alive
 		return c.HTML(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
