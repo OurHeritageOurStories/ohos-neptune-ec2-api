@@ -178,9 +178,8 @@ func getEntities(c echo.Context) error {
 }
 */
 func getEntity(c echo.Context) error {
-	entity := c.Request().URL.Query().Get("entity")
-	//page := strings.ToUpper(c.Request().URL.Query().Get("page"))
-	page := c.Request().URL.Query().Get("page")
+	entity := c.QueryParam("entity")
+	page := c.QueryParam("page")
 
 	fmt.Print("entity" + entity)
 	fmt.Print("page" + page)
@@ -274,6 +273,11 @@ func movingImages(c echo.Context) error {
 
 	defer resp.Body.Close()
 
+	/*
+		constructedQueryCount, oddly, causes timeouts when dealt with. The query works fine, working with the response doesn't. I know there's code
+		arguably missing at the moment, that's not what's causing the issue. This will (hopefully) be sorted soon.
+	*/
+
 	/*constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
 
 	paramsCount := url.Values{}
@@ -307,6 +311,9 @@ func movingImages(c echo.Context) error {
 	//return c.String(http.StatusTeapot, string(output))
 	return c.JSONPretty(http.StatusOK, output, " ")*/
 
+	/*
+		Various bits commented out are effectively notes to myself from the count query
+	*/
 	//defer respCount.Body.Close()
 
 	data, _ := ioutil.ReadAll(resp.Body)
@@ -324,49 +331,6 @@ func movingImages(c echo.Context) error {
 	//jsonMap["count"] = jsonMapCount
 
 	return c.JSONPretty(http.StatusOK, jsonMap, " ")
-}
-
-/*
-	response, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	responseData, err := ioutil.ReadAll(response.Body)
-
-	returnString := string(responseData)
-
-	return c.String(http.StatusTeapot, returnString)
-
-	//var jsonMap map[string]interface{}
-
-	//json.Unmarshal(responseData, &jsonMap)
-
-	//return c.JSON(http.StatusOK, jsonMap)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
-	//respneded, err := json.Marshal(responseData)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
-	//return c.JSON(http.StatusOK, respneded)
-
-	//var jsonMap map[string]interface{}
-
-	//json.Unmarshal([]byte(responseData), &jsonMap)
-
-	//return c.Stringhttp.StatusOK, responseData)
-	//return c.JSONPretty(http.StatusOK, jsonMap, " ")
-}*/
-
-func entitytest(c echo.Context) error {
-	team := c.QueryParam("team")
-	member := c.QueryParam("member")
-	return c.String(http.StatusOK, "team:"+team+", member:"+member)
 }
 
 func main() {
@@ -390,11 +354,9 @@ func main() {
 
 	//e.GET("/entities", getEntities)
 
-	e.GET("/testentities", entitytest)
+	//e.GET("/entities/{entity}", getEntity)
 
 	e.GET("/movingImages", movingImages)
-
-	//e.GET("/entities/{entity}", getEntity)
 
 	e.Logger.Fatal(e.Start(":9000"))
 
