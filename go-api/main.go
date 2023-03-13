@@ -101,6 +101,9 @@ func fetchDiscovery(c echo.Context) error {
 }
 
 /*
+Methods unused at this stage
+*/
+/*
 func getEntities(c echo.Context) error {
 
 	keyword := c.QueryParam("keyword")
@@ -176,7 +179,6 @@ func getEntities(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, jsonMap)
 }
-*/
 func getEntity(c echo.Context) error {
 	entity := c.QueryParam("entity")
 	page := c.QueryParam("page")
@@ -240,6 +242,7 @@ func getEntity(c echo.Context) error {
 
 }
 
+*/
 func movingImages(c echo.Context) error {
 	keyword := c.QueryParam("keyword")
 	page := c.QueryParam("page")
