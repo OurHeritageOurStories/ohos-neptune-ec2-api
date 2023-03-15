@@ -1,18 +1,17 @@
 package main
 
 import (
+	"io"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
+	"github.com/ory/dockertest"
+	"github.com/stretchr/testify/require"
 )
 
-func TestMain(t *testing.T) {
+/*
+func TestBase(t *testing.T) {
 	url := "/"
-	//url := "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=glasgow&page=1"
-	// url := "https://www.google.com"
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, url, nil)
 	rec := httptest.NewRecorder()
@@ -24,63 +23,71 @@ func TestMain(t *testing.T) {
 	}
 }
 
-/*
-type Controller struct {
-}
-
-func (m *Controller) movingImages(c echo.Context) error {
-	return nil
-}
-
-func testBasic(t *testing.T) {
-	t.Run("should return 200", func(t *testing.T) {
-		e := echo.New()
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req, rec)
-		controller := Controller{}
-		controller.movingImages(c)
-		assert.Equal(t, http.StatusOK, rec.Code)
-	})
+func TestContains(t *testing.T) {
+	a := `{"name":"dave","age":3}`
+	b := `"name":"dave"`
+	assert.Contains(t, a, b)
 }
 */
-/*
-func testBasic(t *assert.TestingT) {
-	e := echo.New()
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	if assert.NoError(t, h.movingImages(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-	}
-	/*e := echo.New()
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	controller := Controller{}
-	controller.GetAllBooks(c)*/
-/*
+
+func TestDocker(t *testing.T) {
+	pool, err := dockertest.NewPool("")
+	require.NoError(t, err, "Not connected to docker")
+	resource, err := pool.Run("data-go-api", "latest", []string{})
+	require.NoError(t, err, "could not start container")
+	t.Cleanup(func() {
+		require.NoError(t, pool.Purge(resource), "failedToRemove")
+	})
+	var resp *http.Response
+
+	err = pool.Retry(func() error {
+		//resp, err = http.Get(fmt.Sprint("http://localhost:", resource.GetPort("5000/tcp"), "/api/"))
+		resp, err = http.Get("http://localhost:5000/api")
+		if err != nil {
+			t.Log("container still loading")
+			return err
+		}
+		return nil
+	})
+	require.NoError(t, err, "http error")
+	defer resp.Body.Close()
+
+	require.Equal(t, http.StatusOK, resp.StatusCode, "http status code")
+
+	body, err := io.ReadAll(resp.Body)
+	require.NoError(t, err, "Didn't read the body")
+	require.Contains(t, string(body), "done", "not done after all")
+
 }
 
 /*
-func testBasic(t *testing.T) {
-	t.Run("should return 200", func(t *testing.T) {
+func TestMovingImages(t *testing.T) {
+	baseUrl := "/movingImages"
+	t.Run("should return teapot", func(t *testing.T) {
+		url := baseUrl
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req := httptest.NewRequest(http.MethodGet, url, nil)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
-		controller := Controller{}
-		controller.GetAllBooks(c)
-		assert.Equal(t, http.StatusOK, rec.Code)
+		res := rec.Result()
+		defer res.Body.Close()
+		if assert.NoError(t, movingImages(c)) {
+			assert.Equal(t, http.StatusTeapot, rec.Code)
+		}
 	})
-}
-*/
-/*
-func testGet(t *testing.T){
-	e := echo.New()
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	h := &handler
+
+	t.Run("should check it has a count", func(t *testing.T) {
+		url := baseUrl + "?keyword=glasgow&page=1"
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, url, nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		res := rec.Result()
+		defer res.Body.Close()
+		if assert.NoError(t, movingImages(c)) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Contains(t, "Hello", "Hello")
+		}
+	})
 }
 */

@@ -247,6 +247,10 @@ func movingImages(c echo.Context) error {
 	keyword := c.QueryParam("keyword")
 	page := c.QueryParam("page")
 
+	if keyword == "" && page == "" {
+		return c.NoContent(http.StatusTeapot)
+	}
+
 	off, err := strconv.Atoi(page)
 
 	if err != nil {
