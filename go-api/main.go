@@ -258,7 +258,6 @@ func movingImages(c echo.Context) error {
 	o := strconv.Itoa((off - 1) * 10)
 
 	constructedQuery := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by ?title OFFSET " + o + " LIMIT 10"
-
 	params := url.Values{}
 	params.Add("query", constructedQuery)
 	body := strings.NewReader(params.Encode())
@@ -276,13 +275,11 @@ func movingImages(c echo.Context) error {
 
 	defer resp.Body.Close()
 
-	/*
-		constructedQueryCount, oddly, causes timeouts when dealt with. The query works fine, working with the response doesn't. I know there's code
-		arguably missing at the moment, that's not what's causing the issue. This will (hopefully) be sorted soon.
-	*/
+	data, _ := ioutil.ReadAll(resp.Body)
+	var jsonMap map[string]interface{}
+	json.Unmarshal([]byte(data), &jsonMap)
 
-	/*constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
-
+	constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
 	paramsCount := url.Values{}
 	paramsCount.Add("query", constructedQueryCount)
 	bodyCount := strings.NewReader(paramsCount.Encode())
@@ -298,6 +295,47 @@ func movingImages(c echo.Context) error {
 		log.Fatal(err)
 	}
 
+	defer respCount.Body.Close()
+
+	dataCount, _ := ioutil.ReadAll(respCount.Body)
+	var jsonMapCount map[string]interface{}
+	json.Unmarshal([]byte(dataCount), &jsonMapCount)
+
+	jsonMap["count"] = jsonMapCount
+
+	return c.JSONPretty(http.StatusOK, jsonMap, " ")
+
+	/*
+		constructedQueryCount, oddly, causes timeouts when dealt with. The query works fine, working with the response doesn't. I know there's code
+		arguably missing at the moment, that's not what's causing the issue. This will (hopefully) be sorted soon.
+	*/
+	/*
+		constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
+
+		paramsCount := url.Values{}
+		paramsCount.Add("query", constructedQueryCount)
+		bodyCount := strings.NewReader(paramsCount.Encode())
+
+		reqCount, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", bodyCount)
+		if err != nil {
+			log.Fatal(err)
+		}
+		reqCount.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		respCount, err := http.DefaultClient.Do(reqCount)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+
+		defer respCount.Body.Close()
+
+		data, _ := ioutil.ReadAll(respCount.Body)
+		var jsonMap map[string]interface{}
+		json.Unmarshal([]byte(data), &jsonMap)
+
+		return c.JSONPretty(http.StatusOK, jsonMap, " ")*/
+	/*  /here
 	response, _ := ioutil.ReadAll(resp.Body)
 
 	responseCount, _ := ioutil.ReadAll(respCount.Body)
@@ -318,22 +356,28 @@ func movingImages(c echo.Context) error {
 		Various bits commented out are effectively notes to myself from the count query
 	*/
 	//defer respCount.Body.Close()
+	/* /here
+		data, _ := ioutil.ReadAll(resp.Body)
 
-	data, _ := ioutil.ReadAll(resp.Body)
+		//dataCount, _ := ioutil.ReadAll(respCount.Body)
 
-	//dataCount, _ := ioutil.ReadAll(respCount.Body)
+		var jsonMap map[string]interface{}
 
-	var jsonMap map[string]interface{}
+		json.Unmarshal([]byte(data), &jsonMap)
 
-	json.Unmarshal([]byte(data), &jsonMap)
+		//var jsonMapCount map[string]interface{}
 
-	//var jsonMapCount map[string]interface{}
+		//json.Unmarshal([]byte(dataCount), &jsonMapCount)
 
-	//json.Unmarshal([]byte(dataCount), &jsonMapCount)
+		//jsonMap["count"] = jsonMapCount
 
-	//jsonMap["count"] = jsonMapCount
+		return c.JSONPretty(http.StatusOK, jsonMap, " ")
+	}
+	 / and here */
+}
 
-	return c.JSONPretty(http.StatusOK, jsonMap, " ")
+func helloResponse(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
 }
 
 func main() {
@@ -347,9 +391,11 @@ func main() {
 		AllowOrigins: []string{"*"},
 	}))
 
-	e.GET("/", func(c echo.Context) error { //make sure its alive
-		return c.HTML(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
-	})
+	//e.GET("/", func(c echo.Context) error { //make sure its alive
+	//	return c.HTML(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
+	//})
+
+	e.GET("/", helloResponse)
 
 	e.POST("/sparql", requestToNeptune) //for actual requests
 
