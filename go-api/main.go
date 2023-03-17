@@ -241,14 +241,52 @@ func getEntity(c echo.Context) error {
 	return c.JSON(http.StatusOK, jsonMap)
 
 }
-
 */
-func movingImages(c echo.Context) error {
-	keyword := c.QueryParam("keyword")
-	page := c.QueryParam("page")
 
-	if keyword == "" && page == "" {
-		return c.NoContent(http.StatusTeapot)
+func movingImages(c echo.Context) error {
+	// keyword := c.QueryParam("keyword")
+	//page := c.QueryParam("page")
+	// page := c.Request().URL.Query().Get("page")
+	// page, err := c.Request().URL.Query().Get("page")
+	//if len(c.Echo().URL().)
+	//if len(self.Request().GET.keys()!=2){
+	//	return c.NoContent(http.StatusTeapot)
+	//}
+
+	//c.ParseForm()
+
+	//_, hasPage := c.Form["page"]
+	/*
+		params := c.QueryParams()
+
+		numberOfParams := len(params)
+
+		if numberOfParams != 2 {
+			return c.NoContent(http.StatusTeapot)
+		} else {
+			page := params.Get("page")
+		}
+
+		if keyword == "" && page == "" {
+			return c.NoContent(http.StatusTeapot)
+		}*/
+
+	providedParams := c.QueryParams()
+
+	//default values
+	keyword := "glasgow"
+	page := "1"
+	missingParams := false
+
+	// This is a fairly blunt-instrument approach to dealing with missing
+	// params. Once we have more than 2 and when they are optional, we should
+	// switch this over to something else - maybe a switch, maybe something
+	// else
+	if len(providedParams) != 2 {
+		missingParams = true
+	} else {
+		keyword = providedParams.Get("keyword")
+		page = providedParams.Get("page")
 	}
 
 	off, err := strconv.Atoi(page)
@@ -260,6 +298,8 @@ func movingImages(c echo.Context) error {
 	off = max(1, off)
 
 	o := strconv.Itoa((off - 1) * 10)
+
+	//get the page of results
 
 	constructedQuery := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by ?title OFFSET " + o + " LIMIT 10"
 	params := url.Values{}
@@ -283,6 +323,8 @@ func movingImages(c echo.Context) error {
 	var jsonMap map[string]interface{}
 	json.Unmarshal([]byte(data), &jsonMap)
 
+	//get the total number of results
+
 	constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
 	paramsCount := url.Values{}
 	paramsCount.Add("query", constructedQueryCount)
@@ -305,79 +347,15 @@ func movingImages(c echo.Context) error {
 	var jsonMapCount map[string]interface{}
 	json.Unmarshal([]byte(dataCount), &jsonMapCount)
 
+	//stick the total number of results to the list
+
 	jsonMap["count"] = jsonMapCount
 
-	return c.JSONPretty(http.StatusOK, jsonMap, " ")
-
-	/*
-		constructedQueryCount, oddly, causes timeouts when dealt with. The query works fine, working with the response doesn't. I know there's code
-		arguably missing at the moment, that's not what's causing the issue. This will (hopefully) be sorted soon.
-	*/
-	/*
-		constructedQueryCount := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
-
-		paramsCount := url.Values{}
-		paramsCount.Add("query", constructedQueryCount)
-		bodyCount := strings.NewReader(paramsCount.Encode())
-
-		reqCount, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", bodyCount)
-		if err != nil {
-			log.Fatal(err)
-		}
-		reqCount.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-		respCount, err := http.DefaultClient.Do(reqCount)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-
-		defer respCount.Body.Close()
-
-		data, _ := ioutil.ReadAll(respCount.Body)
-		var jsonMap map[string]interface{}
-		json.Unmarshal([]byte(data), &jsonMap)
-
-		return c.JSONPretty(http.StatusOK, jsonMap, " ")*/
-	/*  /here
-	response, _ := ioutil.ReadAll(resp.Body)
-
-	responseCount, _ := ioutil.ReadAll(respCount.Body)
-
-	out := map[string]interface{}{}
-	json.Unmarshal([]byte(response), &out)
-
-	outCount := map[string]interface{}{}
-	json.Unmarshal([]byte(responseCount), &outCount)
-
-	out["count"] = outCount
-
-	output, _ := json.Marshal(out)
-	//return c.String(http.StatusTeapot, string(output))
-	return c.JSONPretty(http.StatusOK, output, " ")*/
-
-	/*
-		Various bits commented out are effectively notes to myself from the count query
-	*/
-	//defer respCount.Body.Close()
-	/* /here
-		data, _ := ioutil.ReadAll(resp.Body)
-
-		//dataCount, _ := ioutil.ReadAll(respCount.Body)
-
-		var jsonMap map[string]interface{}
-
-		json.Unmarshal([]byte(data), &jsonMap)
-
-		//var jsonMapCount map[string]interface{}
-
-		//json.Unmarshal([]byte(dataCount), &jsonMapCount)
-
-		//jsonMap["count"] = jsonMapCount
-
-		return c.JSONPretty(http.StatusOK, jsonMap, " ")
+	if missingParams {
+		jsonMap["params"] = "Missing params, using default of keyword=glasgow, page=1"
 	}
-	 / and here */
+
+	return c.JSONPretty(http.StatusOK, jsonMap, " ")
 }
 
 func helloResponse(c echo.Context) error {
@@ -395,13 +373,9 @@ func main() {
 		AllowOrigins: []string{"*"},
 	}))
 
-	//e.GET("/", func(c echo.Context) error { //make sure its alive
-	//	return c.HTML(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
-	//})
-
 	e.GET("/", helloResponse)
 
-	e.POST("/sparql", requestToNeptune) //for actual requests
+	e.POST("/sparql", requestToNeptune) //to pass requests directly through
 
 	e.GET("/discovery", fetchDiscovery)
 
