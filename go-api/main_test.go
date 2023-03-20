@@ -48,7 +48,7 @@ func TestMovingImagesGlasgow(t *testing.T) {
 	})
 	var resp *http.Response
 
-	t.Run("test Glasgow", func(t *testing.T) {
+	t.Run("Test Glasgow to determine the data is present", func(t *testing.T) {
 		err = pool.Retry(func() error {
 			resp, err = http.Get("http://localhost:5000/api/movingImages?keyword=glasgow&page=1")
 			if err != nil {
@@ -69,9 +69,88 @@ func TestMovingImagesGlasgow(t *testing.T) {
 		})
 	})
 
-	t.Run("Test that should fail", func(t *testing.T) {
-		_, err := http.Get("http://localhost:5000/api/movingImages?word=glasgow&page=1")
-		require.ErrorContains(t, err, "")
+	t.Run("Test missing parameter works fine - no page count", func(t *testing.T) {
+		err = pool.Retry(func() error {
+			resp, err = http.Get("http://localhost:5000/api/movingImages?keyword=glasgow")
+			if err != nil {
+				t.Log("container still loading")
+				return err
+			}
+			return nil
+		})
+		require.NoError(t, err, "http error")
+		defer resp.Body.Close()
+
+		require.Equal(t, http.StatusUnprocessableEntity, resp.StatusCode, "http status code")
+		/*
+			body, err := io.ReadAll(resp.Body)
+			require.NoError(t, err, "Didn't read the body")
+			t.Run("Should get the missing param notification in the response", func(t *testing.T) {
+				require.Contains(t, string(body), "Missing params, using default of keyword=glasgow, page=1", "not the right count after all")
+			})
+			t.Run("Should get the Glasgow result count", func(t *testing.T) {
+				require.Contains(t, string(body), "178", "not the right count after all")
+			})*/
+	})
+
+	t.Run("Test page count supplied as a word", func(t *testing.T) {
+		err = pool.Retry(func() error {
+			resp, err = http.Get("http://localhost:5000/api/movingImages?keyword=glasgow&page=saussage")
+			if err != nil {
+				t.Log("still loading")
+				return err
+			}
+			return nil
+		})
+		require.NoError(t, err, "http error")
+		defer resp.Body.Close()
+
+		require.Equal(t, http.StatusBadRequest, resp.StatusCode, "Http status code")
+	})
+
+	t.Run("Test valid params that don't exist - huge page number", func(t *testing.T) {
+		err = pool.Retry(func() error {
+			resp, err = http.Get("http://localhost:5000/api/movingImages?keyword=glasgow&page=10000")
+			if err != nil {
+				t.Log("container still loading")
+				return err
+			}
+			return nil
+		})
+		require.NoError(t, err, "http error")
+		defer resp.Body.Close()
+
+		require.Equal(t, http.StatusOK, resp.StatusCode, "http status code")
+
+		body, err := io.ReadAll(resp.Body)
+		require.NoError(t, err, "Didn't read the body")
+		t.Run("Should get all the results", func(t *testing.T) {
+			require.Contains(t, string(body), "5021", "not the right count after all")
+		})
+	})
+
+	t.Run("Test valid params that don't exist - weird keyword", func(t *testing.T) {
+		err = pool.Retry(func() error {
+			resp, err = http.Get("http://localhost:5000/api/movingImages?keyword=adsj&page=1")
+			if err != nil {
+				t.Log("container still loading")
+				return err
+			}
+			return nil
+		})
+		require.NoError(t, err, "http error")
+		defer resp.Body.Close()
+
+		require.Equal(t, http.StatusOK, resp.StatusCode, "http status code")
+
+		body, err := io.ReadAll(resp.Body)
+		require.NoError(t, err, "Didn't read the body")
+		t.Run("Should get all the results", func(t *testing.T) {
+			require.Contains(t, string(body), "5021", "not the right count after all")
+		})
+		t.Run("Should get all the results", func(t *testing.T) {
+			require.Contains(t, string(body), "Water and Waterways ||| Celebrations, Traditions and Customs ||| Transport ||| Ships and Shipping ||| Glasgow", "Didn't get an expected result")
+		})
 	})
 
 }
