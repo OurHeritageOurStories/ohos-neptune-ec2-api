@@ -40,16 +40,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  head:
-                    type: String array
-                    example: "vars" : [ "s", "p", "o" ]
-                    desciption: The variables the agent submitting the query requested
-                  results:
-                    type: Json array
-                    example: "bindings" : [ {"s" : {"type" : "uri","value" : "http://example.comNLS201030"},"p" : {"type" : "uri", "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"o" : {"type" : "uri","value" : "http://www.loc.gov/premis/rdf/v3/IntellectualEntity"}}
-                    desciption: The content returned from the search
+                $ref: "#/components/schemas/sparqlResponse"
         "400":
           description: Bad Request
           content:
@@ -100,12 +91,52 @@ paths:
 
 components:
   schemas:
+    sparqlResponse:
+      properties:
+        head:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/sparqlHeadVars'
+        results:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/sparqlResultsBindings'
+    
+    sparqlHeadVars:
+      type: string array
+
+    sparqlResultsBindings:
+      bindings:
+        type: object array
+        additionalProperties:
+          $ref: '#/components/schemas/sparqlResults'
+
+    sparqlResults:
+      o:
+        type: object
+        additionalProperties:
+          $ref: '#/components/schemas/sparqlResultsSpecific'
+      p:
+        type: object
+        additionalProperties:
+          $ref: '#/components/schemas/sparqlResultsSpecific'
+      s:
+        type: object
+        additionalProperties:
+          $ref: '#/components/schemas/sparqlResultsSpecific'
+
+    sparqlResultsSpecific:
+      type:
+        type: string
+      value:
+        type: string
+
     movingImagesResponse:
       properties:
         id:
           type: array
           additionalProperties:
-            $ref: "#/components/schemas/id"
+            $ref: "#/components/schemas/movingImagesId"
         total:
           type: integer
         first:
@@ -119,16 +150,16 @@ components:
         items:
           type: array
           additionalProperties:
-            $ref: "#/components/schemas/item"
+            $ref: "#/components/schemas/movingImagesItem"
       
-    item:
+    movingImagesItem:
       properties:
         type:
           type: string
         value:
           type: string
 
-    id:
+    movingImagesId:
       properties:
         page:
           type: string

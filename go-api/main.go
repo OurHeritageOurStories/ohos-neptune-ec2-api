@@ -12,8 +12,10 @@ import (
 	"strconv"
 	"strings"
 
+	_ "github.com/OurHeritageOurStories/ohos-neptune-ec2-api/docs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func max(a, b int) int {
@@ -85,10 +87,25 @@ type KeywordStruct struct {
 	Keyword string `json:"keyword"`
 }
 
+// StatusCheck godoc
+// @Summary Test whether the API is running
+// @Description Test whether the api is running
+// @Tags root
+// @Produce plain
+// @Success 200
+// @Router / [get]
 func helloResponse(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
 }
 
+// NeptuneSparql godoc
+// @Summary Send sparql direct to neptune
+// @Description Send sparql direct to neptune
+// @Tags Sparql
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /sparql [post]
 func requestToNeptune(c echo.Context) error {
 
 	sparqlString := c.FormValue("sparqlquery")
@@ -137,9 +154,16 @@ func requestToNeptune(c echo.Context) error {
 
 	json.Unmarshal([]byte(data), &jsonMap)
 
-	return c.JSON(http.StatusOK, jsonMap)
+	return c.JSONPretty(http.StatusOK, jsonMap, " ")
 }
 
+// Discovery godoc
+// @Summary Requests to TNA Discovery API
+// @Description Requests to TNA Discovery API
+// @Tags Discovery
+// @Produce json
+// @Success 200
+// @Router /discovery [get]
 func fetchDiscovery(c echo.Context) error {
 	keyword := c.Request().URL.Query().Get("keyword")
 	source := strings.ToUpper(c.Request().URL.Query().Get("source"))
@@ -167,6 +191,18 @@ func fetchDiscovery(c echo.Context) error {
 	return c.JSONPretty(http.StatusOK, jsonMap, " ")
 }
 
+// Moving Images godoc
+// @Summary Moving images queries
+// @Description Moving images queries
+// @Tags MovingImages
+// @Param q query string true "string query"
+// @Param page query int true "int page"
+// @Produce json
+// @Success 200 {object} keywordReturnStruct
+// @Success 204
+// @Failure 400
+// @Failure 500
+// @Router /movingImages [get]
 func movingImages(c echo.Context) error {
 
 	//default params
@@ -255,18 +291,18 @@ func movingImages(c echo.Context) error {
 
 	//Now that we know the number of pages, we can fill in the various page options
 	jsonToReturn.Total = numberOfResults
-	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/betterMovingImages?keyword=" + keyword + "&page=1"
+	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/mvingImages?keyword=" + keyword + "&page=1"
 	if off == 1 {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/betterMovingImages?keyword=" + keyword + "&page=1"
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=1"
 	} else {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/betterMovingImages?keyword=" + keyword + "&page=" + strconv.Itoa(off-1)
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(off-1)
 	}
 	if off == maxPages {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/betterMovingImages?keyword=" + keyword + "&page=" + strconv.Itoa(maxPages)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(maxPages)
 	} else {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/betterMovingImages?keyword=" + keyword + "&page=" + strconv.Itoa(off+1)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(off+1)
 	}
-	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/betterMovingImages?keyword=" + keyword + "&page=" + strconv.Itoa(maxPages)
+	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(maxPages)
 
 	defer countResp.Body.Close()
 
@@ -313,6 +349,13 @@ func movingImages(c echo.Context) error {
 	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
 }
 
+// @title OHOS api
+// @version 1.0
+// @description OHOS api
+// @termsOfService http://swagger.io/terms/
+// @contact.name The National Archives
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 
 	e := echo.New()
@@ -331,6 +374,8 @@ func main() {
 	e.GET("/discovery", fetchDiscovery)
 
 	e.GET("/movingImages", movingImages)
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.Logger.Fatal(e.Start(":9000"))
 
