@@ -87,6 +87,65 @@ type KeywordStruct struct {
 	Keyword string `json:"keyword"`
 }
 
+//Discovery held by all result
+type discoveryAllStruct struct {
+	CagalogueLevels       []DiscoveryCodeCount
+	ClosureStatuses       []DiscoveryCodeCount
+	Count                 int `json:"count"`
+	Departments           []DiscoveryCodeCount
+	HeldByReps            []DiscoveryCodeCount
+	NextBatchMark         string `json:"nextBatchMark"`
+	Records               []DiscoveryRecordDetails
+	ReferenceFirstLetters []DiscoveryCodeCount
+	Repositories          []DiscoveryCodeCount
+	Sources               []DiscoveryCodeCount
+	TaxonomySubject       []DiscoveryCodeCount
+	TimePeriods           []DiscoveryCodeCount
+	TitleFirstLetters     []DiscoveryCodeCount
+}
+
+type DiscoveryRecordDetails struct {
+	AdminHistory       string   `json:"adminHistory"`
+	AltName            string   `json:"altName"`
+	Arrangement        string   `json:"arrangement"`
+	CatalogueLevel     int      `json:"catalogueLevel"`
+	ClosureCode        string   `json:"closureCode"`
+	ClosureStatus      string   `json:"closureStatus"`
+	ClosureType        string   `json:"closureType"`
+	Content            string   `json:"content"`
+	Context            string   `json:"context"`
+	CorpBodies         []string `json:"corpBodies"`
+	CoveringDates      string   `json:"coveringDates"`
+	Department         string   `json:"department"`
+	Description        string   `json:"description"`
+	DocumentType       string   `json:"documentType"`
+	EndDate            string   `json:"endDate"`
+	FormerReferenceDep string   `json:"formerReferenceDep"`
+	FormerReferencePro string   `json:"formerReferencePro"`
+	HeldBy             []string `json:"heldBy"`
+	Id                 string   `json:"id"`
+	MapDesignation     string   `json:"mapDesignation"`
+	MapScale           string   `json:"mapScale"`
+	Note               string   `json:"note"`
+	NumEndDate         int      `json:"numEndDate"`
+	NumStartDate       int      `json:"numStartDate"`
+	OpeningDate        string   `json:"openingDate"`
+	PhysicalCondition  string   `json:"physicalCondition"`
+	Places             []string `json:"places"`
+	Reference          string   `json:"reference"`
+	Score              int      `json:"score"`
+	Source             string   `json:"source"`
+	StartDate          string   `json:"startDate"`
+	Taxonomies         []string `json:"taxonomies"`
+	Title              string   `json:"title"`
+	UrlParameters      string   `json:"urlParameters"`
+}
+
+type DiscoveryCodeCount struct {
+	Code  string `json:"code"`
+	Count int    `json:"count"`
+}
+
 // StatusCheck godoc
 // @Summary Test whether the API is running
 // @Description Test whether the api is running
@@ -162,7 +221,7 @@ func requestToNeptune(c echo.Context) error {
 // @Description Requests to TNA Discovery API
 // @Tags Discovery
 // @Produce json
-// @Success 200
+// @Success 200 {object} discoveryAllStruct
 // @Router /discovery [get]
 func fetchDiscovery(c echo.Context) error {
 	keyword := c.Request().URL.Query().Get("keyword")
@@ -291,18 +350,18 @@ func movingImages(c echo.Context) error {
 
 	//Now that we know the number of pages, we can fill in the various page options
 	jsonToReturn.Total = numberOfResults
-	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/mvingImages?keyword=" + keyword + "&page=1"
+	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/mvingImages?q=" + keyword + "&page=1"
 	if off == 1 {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=1"
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=1"
 	} else {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(off-1)
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(off-1)
 	}
 	if off == maxPages {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(maxPages)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 	} else {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(off+1)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(off+1)
 	}
-	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?keyword=" + keyword + "&page=" + strconv.Itoa(maxPages)
+	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 
 	defer countResp.Body.Close()
 

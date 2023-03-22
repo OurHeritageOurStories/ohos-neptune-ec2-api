@@ -6,6 +6,92 @@ definitions:
       topics:
         $ref: '#/definitions/main.TitleTopicStructValues'
     type: object
+  main.DiscoveryCodeCount:
+    properties:
+      code:
+        type: string
+      count:
+        type: integer
+    type: object
+  main.DiscoveryRecordDetails:
+    properties:
+      adminHistory:
+        type: string
+      altName:
+        type: string
+      arrangement:
+        type: string
+      catalogueLevel:
+        type: integer
+      closureCode:
+        type: string
+      closureStatus:
+        type: string
+      closureType:
+        type: string
+      content:
+        type: string
+      context:
+        type: string
+      corpBodies:
+        items:
+          type: string
+        type: array
+      coveringDates:
+        type: string
+      department:
+        type: string
+      description:
+        type: string
+      documentType:
+        type: string
+      endDate:
+        type: string
+      formerReferenceDep:
+        type: string
+      formerReferencePro:
+        type: string
+      heldBy:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      mapDesignation:
+        type: string
+      mapScale:
+        type: string
+      note:
+        type: string
+      numEndDate:
+        type: integer
+      numStartDate:
+        type: integer
+      openingDate:
+        type: string
+      physicalCondition:
+        type: string
+      places:
+        items:
+          type: string
+        type: array
+      reference:
+        type: string
+      score:
+        type: integer
+      source:
+        type: string
+      startDate:
+        type: string
+      taxonomies:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      urlParameters:
+        type: string
+    type: object
   main.KeywordStruct:
     properties:
       keyword:
@@ -19,6 +105,57 @@ definitions:
         type: string
       value:
         type: string
+    type: object
+  main.discoveryAllStruct:
+    properties:
+      cagalogueLevels:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      closureStatuses:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      count:
+        type: integer
+      departments:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      heldByReps:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      nextBatchMark:
+        type: string
+      records:
+        items:
+          $ref: '#/definitions/main.DiscoveryRecordDetails'
+        type: array
+      referenceFirstLetters:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      repositories:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      sources:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      taxonomySubject:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      timePeriods:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      titleFirstLetters:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
     type: object
   main.keywordReturnStruct:
     properties:
@@ -69,6 +206,8 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/main.discoveryAllStruct'
       summary: Requests to TNA Discovery API
       tags:
       - Discovery
