@@ -64,4 +64,73 @@ paths:
               schema:
                 type: string
                 example: Something went wrong!
+  
+  /movingImages:
+    get:
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          required: true
+          description: Keyword to search for
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: Page of results to look for
+      description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/movingImagesResponse"
+        '204':
+          description: No Content. Search didn't error, but returned no responses.
+        '400':
+          description: Bad Request. User error in the search; search term missing or similar. 
+        '416':
+          description: Range Not Satisfiable. User has requested a page number of results higher than exists for this search. 
+        '500':
+          description: Internal server error. Something went wrong in the server. 
 
+components:
+  schemas:
+    movingImagesResponse:
+      properties:
+        id:
+          type: array
+          additionalProperties:
+            $ref: "#/components/schemas/id"
+        total:
+          type: integer
+        first:
+          type: string
+        prev:
+          type: string
+        next:
+          type: string
+        last:
+          type: string
+        items:
+          type: array
+          additionalProperties:
+            $ref: "#/components/schemas/item"
+      
+    item:
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+
+    id:
+      properties:
+        page:
+          type: string
+        keyword:
+          type: string
