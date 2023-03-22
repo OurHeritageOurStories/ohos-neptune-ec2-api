@@ -204,7 +204,7 @@ paths:
       parameters:
       - description: string query
         in: query
-        name: keyword
+        name: q
         required: true
         type: string
       - description: string sourceArchives

@@ -221,13 +221,13 @@ func requestToNeptune(c echo.Context) error {
 // @Description Requests to TNA Discovery API
 // @Tags Discovery
 // @Produce json
-// @Param keyword query string true "string query"
+// @Param q query string true "string query"
 // @Param source query string true "string sourceArchives"
 // @Success 200 {object} discoveryAllStruct
 // @Router /discovery [get]
 func fetchDiscovery(c echo.Context) error {
-	keyword := c.Request().URL.Query().Get("keyword")
-	source := strings.ToUpper(c.Request().URL.Query().Get("source"))
+	keyword := c.Param("q")
+	source := c.Param("source")
 
 	if source == "" {
 		source = "ALL"

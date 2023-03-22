@@ -54,7 +54,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "string query",
-                        "name": "keyword",
+                        "name": "q",
                         "in": "query",
                         "required": true
                     },
