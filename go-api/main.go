@@ -221,6 +221,8 @@ func requestToNeptune(c echo.Context) error {
 // @Description Requests to TNA Discovery API
 // @Tags Discovery
 // @Produce json
+// @Param keyword query string true "string query"
+// @Param source query string true "string sourceArchives"
 // @Success 200 {object} discoveryAllStruct
 // @Router /discovery [get]
 func fetchDiscovery(c echo.Context) error {

@@ -50,6 +50,22 @@ const docTemplate = `{
                     "Discovery"
                 ],
                 "summary": "Requests to TNA Discovery API",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "string query",
+                        "name": "keyword",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "string sourceArchives",
+                        "name": "source",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
