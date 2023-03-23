@@ -1,0 +1,268 @@
+definitions:
+  main.BindingsResultsTitleTopic:
+    properties:
+      title:
+        $ref: '#/definitions/main.TitleTopicStructValues'
+      topics:
+        $ref: '#/definitions/main.TitleTopicStructValues'
+    type: object
+  main.DiscoveryCodeCount:
+    properties:
+      code:
+        type: string
+      count:
+        type: integer
+    type: object
+  main.DiscoveryRecordDetails:
+    properties:
+      adminHistory:
+        type: string
+      altName:
+        type: string
+      arrangement:
+        type: string
+      catalogueLevel:
+        type: integer
+      closureCode:
+        type: string
+      closureStatus:
+        type: string
+      closureType:
+        type: string
+      content:
+        type: string
+      context:
+        type: string
+      corpBodies:
+        items:
+          type: string
+        type: array
+      coveringDates:
+        type: string
+      department:
+        type: string
+      description:
+        type: string
+      documentType:
+        type: string
+      endDate:
+        type: string
+      formerReferenceDep:
+        type: string
+      formerReferencePro:
+        type: string
+      heldBy:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      mapDesignation:
+        type: string
+      mapScale:
+        type: string
+      note:
+        type: string
+      numEndDate:
+        type: integer
+      numStartDate:
+        type: integer
+      openingDate:
+        type: string
+      physicalCondition:
+        type: string
+      places:
+        items:
+          type: string
+        type: array
+      reference:
+        type: string
+      score:
+        type: integer
+      source:
+        type: string
+      startDate:
+        type: string
+      taxonomies:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      urlParameters:
+        type: string
+    type: object
+  main.KeywordStruct:
+    properties:
+      keyword:
+        type: string
+      page:
+        type: string
+    type: object
+  main.TitleTopicStructValues:
+    properties:
+      type:
+        type: string
+      value:
+        type: string
+    type: object
+  main.discoveryAllStruct:
+    properties:
+      cagalogueLevels:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      closureStatuses:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      count:
+        type: integer
+      departments:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      heldByReps:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      nextBatchMark:
+        type: string
+      records:
+        items:
+          $ref: '#/definitions/main.DiscoveryRecordDetails'
+        type: array
+      referenceFirstLetters:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      repositories:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      sources:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      taxonomySubject:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      timePeriods:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+      titleFirstLetters:
+        items:
+          $ref: '#/definitions/main.DiscoveryCodeCount'
+        type: array
+    type: object
+  main.keywordReturnStruct:
+    properties:
+      first:
+        type: string
+      id:
+        $ref: '#/definitions/main.KeywordStruct'
+      items:
+        items:
+          $ref: '#/definitions/main.BindingsResultsTitleTopic'
+        type: array
+      last:
+        type: string
+      next:
+        type: string
+      prev:
+        type: string
+      total:
+        type: integer
+    type: object
+info:
+  contact:
+    name: The National Archives
+  description: OHOS api
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: OHOS api
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Test whether the api is running
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      summary: Test whether the API is running
+      tags:
+      - root
+  /discovery:
+    get:
+      description: Requests to TNA Discovery API
+      parameters:
+      - description: string query
+        in: query
+        name: q
+        required: true
+        type: string
+      - description: string sourceArchives
+        in: query
+        name: source
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.discoveryAllStruct'
+      summary: Requests to TNA Discovery API
+      tags:
+      - Discovery
+  /movingImages:
+    get:
+      description: Moving images queries
+      parameters:
+      - description: string query
+        in: query
+        name: q
+        required: true
+        type: string
+      - description: int page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.keywordReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Moving images queries
+      tags:
+      - MovingImages
+  /sparql:
+    post:
+      consumes:
+      - application/json
+      description: Send sparql direct to neptune
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Send sparql direct to neptune
+      tags:
+      - Sparql
+swagger: "2.0"

@@ -30,3 +30,10 @@ services:
       - .env
     ports:
       - "9000:9000"
+
+  frontend:
+    image: public.ecr.aws/j8z6n5u1/data-go-ui:latest
+    hostname: frontend
+    container_name: frontend
+    ports:
+      - 3000
