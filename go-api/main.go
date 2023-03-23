@@ -411,12 +411,14 @@ func movingImages(c echo.Context) error {
 }
 
 // @title OHOS api
-// @version 1.0
+// @version 1.1
 // @description OHOS api
 // @termsOfService http://swagger.io/terms/
 // @contact.name The National Archives
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/
+// @BasePath /api
 func main() {
 
 	e := echo.New()
