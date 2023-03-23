@@ -411,7 +411,7 @@ func movingImages(c echo.Context) error {
 }
 
 // @title OHOS api
-// @version 1.1
+// @version 1.0.1
 // @description OHOS api
 // @termsOfService http://swagger.io/terms/
 // @contact.name The National Archives
