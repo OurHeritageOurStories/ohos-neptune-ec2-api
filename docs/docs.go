@@ -143,14 +143,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.BindingsResultsTitleTopic": {
+        "main.BindingsTitleTopicUrlDescription": {
             "type": "object",
             "properties": {
+                "description": {
+                    "$ref": "#/definitions/main.TitleTopicStructValues"
+                },
                 "title": {
                     "$ref": "#/definitions/main.TitleTopicStructValues"
                 },
                 "topics": {
                     "$ref": "#/definitions/main.TitleTopicStructValues"
+                },
+                "url": {
+                    "$ref": "#/definitions/main.URLReturnValues"
                 }
             }
         },
@@ -306,6 +312,20 @@ const docTemplate = `{
                 }
             }
         },
+        "main.URLReturnValues": {
+            "type": "object",
+            "properties": {
+                "datatype": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "main.discoveryAllStruct": {
             "type": "object",
             "properties": {
@@ -395,7 +415,7 @@ const docTemplate = `{
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/main.BindingsResultsTitleTopic"
+                        "$ref": "#/definitions/main.BindingsTitleTopicUrlDescription"
                     }
                 },
                 "last": {

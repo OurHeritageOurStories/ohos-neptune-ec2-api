@@ -1,11 +1,15 @@
 basePath: /api
 definitions:
-  main.BindingsResultsTitleTopic:
+  main.BindingsTitleTopicUrlDescription:
     properties:
+      description:
+        $ref: '#/definitions/main.TitleTopicStructValues'
       title:
         $ref: '#/definitions/main.TitleTopicStructValues'
       topics:
         $ref: '#/definitions/main.TitleTopicStructValues'
+      url:
+        $ref: '#/definitions/main.URLReturnValues'
     type: object
   main.DiscoveryCodeCount:
     properties:
@@ -107,6 +111,15 @@ definitions:
       value:
         type: string
     type: object
+  main.URLReturnValues:
+    properties:
+      datatype:
+        type: string
+      type:
+        type: string
+      value:
+        type: string
+    type: object
   main.discoveryAllStruct:
     properties:
       cagalogueLevels:
@@ -166,7 +179,7 @@ definitions:
         $ref: '#/definitions/main.KeywordStruct'
       items:
         items:
-          $ref: '#/definitions/main.BindingsResultsTitleTopic'
+          $ref: '#/definitions/main.BindingsTitleTopicUrlDescription'
         type: array
       last:
         type: string
