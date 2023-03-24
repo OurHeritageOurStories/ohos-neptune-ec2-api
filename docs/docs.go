@@ -143,14 +143,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.BindingsResultsTitleTopic": {
+        "main.BindingsTitleTopicUrlDescription": {
             "type": "object",
             "properties": {
+                "description": {
+                    "$ref": "#/definitions/main.TitleTopicStructValues"
+                },
                 "title": {
                     "$ref": "#/definitions/main.TitleTopicStructValues"
                 },
                 "topics": {
                     "$ref": "#/definitions/main.TitleTopicStructValues"
+                },
+                "url": {
+                    "$ref": "#/definitions/main.URLReturnValues"
                 }
             }
         },
@@ -306,6 +312,20 @@ const docTemplate = `{
                 }
             }
         },
+        "main.URLReturnValues": {
+            "type": "object",
+            "properties": {
+                "datatype": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "main.discoveryAllStruct": {
             "type": "object",
             "properties": {
@@ -395,7 +415,7 @@ const docTemplate = `{
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/main.BindingsResultsTitleTopic"
+                        "$ref": "#/definitions/main.BindingsTitleTopicUrlDescription"
                     }
                 },
                 "last": {
@@ -417,9 +437,9 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0.1",
+	Host:             "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/",
+	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "OHOS api",
 	Description:      "OHOS api",

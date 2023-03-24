@@ -1,10 +1,15 @@
+basePath: /api
 definitions:
-  main.BindingsResultsTitleTopic:
+  main.BindingsTitleTopicUrlDescription:
     properties:
+      description:
+        $ref: '#/definitions/main.TitleTopicStructValues'
       title:
         $ref: '#/definitions/main.TitleTopicStructValues'
       topics:
         $ref: '#/definitions/main.TitleTopicStructValues'
+      url:
+        $ref: '#/definitions/main.URLReturnValues'
     type: object
   main.DiscoveryCodeCount:
     properties:
@@ -106,6 +111,15 @@ definitions:
       value:
         type: string
     type: object
+  main.URLReturnValues:
+    properties:
+      datatype:
+        type: string
+      type:
+        type: string
+      value:
+        type: string
+    type: object
   main.discoveryAllStruct:
     properties:
       cagalogueLevels:
@@ -165,7 +179,7 @@ definitions:
         $ref: '#/definitions/main.KeywordStruct'
       items:
         items:
-          $ref: '#/definitions/main.BindingsResultsTitleTopic'
+          $ref: '#/definitions/main.BindingsTitleTopicUrlDescription'
         type: array
       last:
         type: string
@@ -176,6 +190,7 @@ definitions:
       total:
         type: integer
     type: object
+host: http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/
 info:
   contact:
     name: The National Archives
@@ -185,7 +200,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
   title: OHOS api
-  version: "1.0"
+  version: 1.0.1
 paths:
   /:
     get:

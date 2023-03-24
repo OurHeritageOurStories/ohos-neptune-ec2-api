@@ -49,6 +49,29 @@ type resultsBindingCount struct {
 	Value    string `json: value`
 }
 
+//struct for results for title/topic/url/description in movingImages
+type movingImagesTitleTopicUrlDesc struct {
+	Head    RDFHeadResponse
+	Results TitleTopicUrlDescriptionBindingStruct
+}
+
+type TitleTopicUrlDescriptionBindingStruct struct {
+	Bindings []BindingsTitleTopicUrlDescription
+}
+
+type BindingsTitleTopicUrlDescription struct {
+	Title       TitleTopicStructValues
+	Description TitleTopicStructValues
+	URL         URLReturnValues
+	Topics      TitleTopicStructValues
+}
+
+type URLReturnValues struct {
+	Datatype string `json:"datatype"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+}
+
 // struct for results for title/topic search
 
 type TitleTopicStruct struct {
@@ -73,13 +96,13 @@ type TitleTopicStructValues struct {
 // struct for returning a keyword search
 
 type keywordReturnStruct struct {
-	Id    KeywordStruct               `json:"id"`
-	Total int                         `json:"total"`
-	First string                      `json:"first"`
-	Prev  string                      `json:"prev"`
-	Next  string                      `json:"next"`
-	Last  string                      `json:"last"`
-	Items []BindingsResultsTitleTopic `json:"items"`
+	Id    KeywordStruct                      `json:"id"`
+	Total int                                `json:"total"`
+	First string                             `json:"first"`
+	Prev  string                             `json:"prev"`
+	Next  string                             `json:"next"`
+	Last  string                             `json:"last"`
+	Items []BindingsTitleTopicUrlDescription `json:"items"`
 }
 
 type KeywordStruct struct {
@@ -144,6 +167,12 @@ type DiscoveryRecordDetails struct {
 type DiscoveryCodeCount struct {
 	Code  string `json:"code"`
 	Count int    `json:"count"`
+}
+
+// TODO this should have more than one return
+func buildMainSparqlQuery(keyword string, offset string) string {
+	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>select ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .} group by ?title ?description ?url order by ?title  OFFSET " + offset + " limit 10"
+	return titleTopicURLDescription
 }
 
 // StatusCheck godoc
@@ -369,7 +398,7 @@ func movingImages(c echo.Context) error {
 
 	//Now, we do the actual query
 
-	mainSearchQuery := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by ?title OFFSET " + offset + " LIMIT 10"
+	mainSearchQuery := buildMainSparqlQuery(keyword, offset)
 
 	mainSearchParams := url.Values{}
 	mainSearchParams.Add("query", mainSearchQuery)
@@ -393,7 +422,7 @@ func movingImages(c echo.Context) error {
 
 	// Map the main response to the struct
 
-	var mainResultStruct TitleTopicStruct
+	var mainResultStruct movingImagesTitleTopicUrlDesc
 
 	mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
 
@@ -411,12 +440,14 @@ func movingImages(c echo.Context) error {
 }
 
 // @title OHOS api
-// @version 1.0
+// @version 1.0.1
 // @description OHOS api
 // @termsOfService http://swagger.io/terms/
 // @contact.name The National Archives
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/
+// @BasePath /api
 func main() {
 
 	e := echo.New()
