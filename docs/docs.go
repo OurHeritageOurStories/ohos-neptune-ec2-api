@@ -438,7 +438,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.1",
-	Host:             "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/",
+	Host:             "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000",
 	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "OHOS api",
