@@ -446,7 +446,7 @@ func movingImages(c echo.Context) error {
 // @contact.name The National Archives
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000
+// @host ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000
 // @BasePath /api
 func main() {
 

@@ -3,7 +3,7 @@ module example/ohos-go-ec2
 go 1.18
 
 require (
-	github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230324150849-37ea9c5b0887
+	github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230327095502-6db77df56eed
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/swaggo/echo-swagger v1.3.5
 )

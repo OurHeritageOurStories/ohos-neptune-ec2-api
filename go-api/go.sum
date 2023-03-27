@@ -11,6 +11,8 @@ github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230323110814-5c4b
 github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230323110814-5c4b7313a958/go.mod h1:732UC9rGZ7CH1zD1jsP/nZjLCm+/DRy5jV2gQ9D/Gfk=
 github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230324150849-37ea9c5b0887 h1:ZNL0FG6/JSvDy1rmsXYbhqOBV48gK4xgqahOgSeT7mw=
 github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230324150849-37ea9c5b0887/go.mod h1:732UC9rGZ7CH1zD1jsP/nZjLCm+/DRy5jV2gQ9D/Gfk=
+github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230327095502-6db77df56eed h1:ndmwh48aqRr/QoqfF0enYoZFLeX1h4zDFbHbZfzH554=
+github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230327095502-6db77df56eed/go.mod h1:732UC9rGZ7CH1zD1jsP/nZjLCm+/DRy5jV2gQ9D/Gfk=
 github.com/PuerkitoBio/purell v1.1.1 h1:WEQqlqaGbrPkxLJWfBwQmfEAE1Z7ONdDLqrN38tNFfI=
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/purell v1.2.0 h1:/Jdm5QfyM8zdlqT6WVZU4cfP23sot6CEHA4CS49Ezig=
