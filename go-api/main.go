@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	// _ "github.com/OurHeritageOurStories/ohos-neptune-ec2-api/docs"
+	_ "github.com/OurHeritageOurStories/ohos-neptune-ec2-api/docs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
