@@ -466,7 +466,7 @@ func movingImages(c echo.Context) error {
 // @Success 204
 // @Failure 400
 // @Failure 500
-// @Router /movingImagesEntity [get]
+// @Router /movingImagesEnt [get]
 func movingImagesEntity(c echo.Context) error {
 
 	var jsonToReturn EntityReturnStruct
@@ -543,7 +543,7 @@ func main() {
 
 	e.GET("/movingImages", movingImages)
 
-	e.GET("/movingImages/entity/:id", movingImagesEntity)
+	e.GET("/movingImagesEnt/entity/:id", movingImagesEntity)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
