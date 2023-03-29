@@ -60,6 +60,7 @@ type TitleTopicUrlDescriptionBindingStruct struct {
 }
 
 type BindingsTitleTopicUrlDescription struct {
+	Identifier 	IdentifierReturnValues
 	Title       TitleTopicStructValues
 	Description TitleTopicStructValues
 	URL         URLReturnValues
@@ -68,6 +69,11 @@ type BindingsTitleTopicUrlDescription struct {
 
 type URLReturnValues struct {
 	Datatype string `json:"datatype"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+}
+
+type IdentifierReturnValues struct {
 	Type     string `json:"type"`
 	Value    string `json:"value"`
 }
@@ -102,6 +108,10 @@ type keywordReturnStruct struct {
 	Prev  string                             `json:"prev"`
 	Next  string                             `json:"next"`
 	Last  string                             `json:"last"`
+	Items []BindingsTitleTopicUrlDescription `json:"items"`
+}
+
+type EntityReturnStruct struct {
 	Items []BindingsTitleTopicUrlDescription `json:"items"`
 }
 
@@ -171,7 +181,12 @@ type DiscoveryCodeCount struct {
 
 // TODO this should have more than one return
 func buildMainSparqlQuery(keyword string, offset string) string {
-	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>select ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .} group by ?title ?description ?url order by ?title  OFFSET " + offset + " limit 10"
+	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>select (?id as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url . ?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value ?id .} group by ?title ?id ?description ?url order by ?title  OFFSET " + offset + " limit 10"
+	return titleTopicURLDescription
+}
+
+func buildEntityMainSparqlQuery(id string) string {
+	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ('"+id+"' as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value '"+id+"' .} group by ?title ?description ?url order by ?title OFFSET 0 limit 10"
 	return titleTopicURLDescription
 }
 
@@ -335,6 +350,7 @@ func movingImages(c echo.Context) error {
 
 	countParams := url.Values{}
 	countParams.Add("query", countQuery)
+	countParams.Add("format", "json")
 	countBody := strings.NewReader(countParams.Encode())
 
 	countReq, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", countBody)
@@ -402,6 +418,66 @@ func movingImages(c echo.Context) error {
 
 	mainSearchParams := url.Values{}
 	mainSearchParams.Add("query", mainSearchQuery)
+	mainSearchParams.Add("format", "json")
+	mainSearchBody := strings.NewReader(mainSearchParams.Encode())
+
+	mainSearchReq, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", mainSearchBody)
+
+	if err != nil {
+		log.Fatal(err)
+		return c.String(http.StatusInternalServerError, "Something went wrong sending the main request to the database.")
+	}
+
+	mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	mainSearchResp, err := http.DefaultClient.Do(mainSearchReq)
+
+	if err != nil {
+		log.Fatal(err)
+		return c.String(http.StatusInternalServerError, "Something went wrong getting the main result from the database.")
+	}
+
+	// Map the main response to the struct
+
+	var mainResultStruct movingImagesTitleTopicUrlDesc
+
+	mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
+
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "Something went wrong reading the main response.")
+	}
+
+	if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
+		return c.String(http.StatusInternalServerError, "Something went wrong working with the main results.")
+	}
+
+	jsonToReturn.Items = mainResultStruct.Results.Bindings
+
+	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
+}
+
+// Moving Images Entity godoc
+// @Summary Moving images get specific entity query
+// @Description Moving images get specific entity query
+// @Tags MovingImages Entity
+// @Param id query string true "string id"
+// @Produce json
+// @Success 200 {object} EntityReturnStruct
+// @Success 204
+// @Failure 400
+// @Failure 500
+// @Router /movingImagesEnt/entity [get]
+func movingImagesEntity(c echo.Context) error {
+
+	var jsonToReturn EntityReturnStruct
+
+	id := c.Param("id")
+
+	mainSearchQuery := buildEntityMainSparqlQuery(id)
+
+	mainSearchParams := url.Values{}
+	mainSearchParams.Add("query", mainSearchQuery)
+	mainSearchParams.Add("format", "json")
 	mainSearchBody := strings.NewReader(mainSearchParams.Encode())
 
 	mainSearchReq, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", mainSearchBody)
@@ -466,6 +542,8 @@ func main() {
 	e.GET("/discovery", fetchDiscovery)
 
 	e.GET("/movingImages", movingImages)
+
+	e.GET("/movingImagesEnt/entity/:id", movingImagesEntity)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
