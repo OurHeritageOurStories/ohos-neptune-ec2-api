@@ -4,6 +4,8 @@ definitions:
     properties:
       description:
         $ref: '#/definitions/main.TitleTopicStructValues'
+      identifier:
+        $ref: '#/definitions/main.IdentifierReturnValues'
       title:
         $ref: '#/definitions/main.TitleTopicStructValues'
       topics:
@@ -95,6 +97,20 @@ definitions:
       title:
         type: string
       urlParameters:
+        type: string
+    type: object
+  main.EntityReturnStruct:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/main.BindingsTitleTopicUrlDescription'
+        type: array
+    type: object
+  main.IdentifierReturnValues:
+    properties:
+      type:
+        type: string
+      value:
         type: string
     type: object
   main.KeywordStruct:
@@ -267,6 +283,31 @@ paths:
       summary: Moving images queries
       tags:
       - MovingImages
+  /movingImagesEnt/entity:
+    get:
+      description: Moving images get specific entity query
+      parameters:
+      - description: string id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.EntityReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Moving images get specific entity query
+      tags:
+      - MovingImages Entity
   /sparql:
     post:
       consumes:
