@@ -147,12 +147,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/main.EntityReturnStruct"
                         }
                     },
-                    "204": {
-                        "description": "No Content"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
                     "500": {
                         "description": "Internal Server Error"
                     }
