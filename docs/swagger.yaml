@@ -283,7 +283,7 @@ paths:
       summary: Moving images queries
       tags:
       - MovingImages
-  /movingImagesEnt/entity:
+  /movingImagesEnt/entity/{id}:
     get:
       description: Moving images get specific entity query
       parameters:
