@@ -464,7 +464,7 @@ func movingImages(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} EntityReturnStruct
 // @Failure 500
-// @Router /movingImagesEnt/entity [get]
+// @Router /movingImagesEnt/entity/{id} [get]
 func movingImagesEntity(c echo.Context) error {
 
 	var jsonToReturn EntityReturnStruct
