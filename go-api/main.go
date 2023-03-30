@@ -463,8 +463,6 @@ func movingImages(c echo.Context) error {
 // @Param id query string true "string id"
 // @Produce json
 // @Success 200 {object} EntityReturnStruct
-// @Success 204
-// @Failure 400
 // @Failure 500
 // @Router /movingImagesEnt/entity [get]
 func movingImagesEntity(c echo.Context) error {
