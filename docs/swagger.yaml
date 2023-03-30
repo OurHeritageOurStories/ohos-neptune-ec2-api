@@ -288,7 +288,7 @@ paths:
       description: Moving images get specific entity query
       parameters:
       - description: string id
-        in: query
+        in: path
         name: id
         required: true
         type: string

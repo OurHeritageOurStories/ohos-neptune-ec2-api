@@ -460,7 +460,7 @@ func movingImages(c echo.Context) error {
 // @Summary Moving images get specific entity query
 // @Description Moving images get specific entity query
 // @Tags MovingImages Entity
-// @Param id query string true "string id"
+// @Param id path string true "string id"
 // @Produce json
 // @Success 200 {object} EntityReturnStruct
 // @Failure 500
