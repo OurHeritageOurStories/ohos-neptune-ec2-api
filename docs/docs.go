@@ -136,7 +136,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "string id",
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
