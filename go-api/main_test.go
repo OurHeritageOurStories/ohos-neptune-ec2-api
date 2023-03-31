@@ -1,10 +1,8 @@
 package main
 
 import (
-	// "io"
     "net/http"
     "net/http/httptest"
-    // "strings"
     "testing"
 
     "github.com/labstack/echo/v4"
