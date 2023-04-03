@@ -60,7 +60,7 @@ type TitleTopicUrlDescriptionBindingStruct struct {
 }
 
 type BindingsTitleTopicUrlDescription struct {
-	Identifier 	IdentifierReturnValues
+	Identifier  IdentifierReturnValues
 	Title       TitleTopicStructValues
 	Description TitleTopicStructValues
 	URL         URLReturnValues
@@ -74,8 +74,8 @@ type URLReturnValues struct {
 }
 
 type IdentifierReturnValues struct {
-	Type     string `json:"type"`
-	Value    string `json:"value"`
+	Type  string `json:"type"`
+	Value string `json:"value"`
 }
 
 // struct for results for title/topic search
@@ -186,7 +186,7 @@ func buildMainSparqlQuery(keyword string, offset string) string {
 }
 
 func buildEntityMainSparqlQuery(id string) string {
-	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ('"+id+"' as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value '"+id+"' .} group by ?title ?description ?url order by ?title OFFSET 0 limit 10"
+	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ('" + id + "' as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value '" + id + "' .} group by ?title ?description ?url order by ?title OFFSET 0 limit 10"
 	return titleTopicURLDescription
 }
 
@@ -307,7 +307,7 @@ func fetchDiscovery(c echo.Context) error {
 // @Success 204
 // @Failure 400
 // @Failure 500
-// @Router /movingImages [get]
+// @Router /moving-images [get]
 func movingImages(c echo.Context) error {
 
 	//default params
@@ -466,7 +466,7 @@ func movingImages(c echo.Context) error {
 // @Success 204
 // @Failure 400
 // @Failure 500
-// @Router /movingImagesEnt/entity [get]
+// @Router /moving-images-ent/entity [get]
 func movingImagesEntity(c echo.Context) error {
 
 	var jsonToReturn EntityReturnStruct
@@ -541,9 +541,9 @@ func main() {
 
 	e.GET("/discovery", fetchDiscovery)
 
-	e.GET("/movingImages", movingImages)
+	e.GET("/moving-images", movingImages)
 
-	e.GET("/movingImagesEnt/entity/:id", movingImagesEntity)
+	e.GET("/moving-images-ent/entity/:id", movingImagesEntity)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
