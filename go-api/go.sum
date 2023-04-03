@@ -1,3 +1,7 @@
+github.com/AndrewBewseyTNA/echo-swagger v0.0.0-20230403103356-3aa67e30e23a h1:drLNR9KgA3yggwHUVp0sz0+vkpptJuCIRhGkdhDtt0c=
+github.com/AndrewBewseyTNA/echo-swagger v0.0.0-20230403103356-3aa67e30e23a/go.mod h1:Liho6T8COJxbVLG8CMXXt9kupGYCnpcnJhIeWnX1fdM=
+github.com/AndrewBewseyTNA/echo/v4 v4.0.0-20230403085805-b70769f7e765 h1:LSoMbBzmE/GDWN5ObQVZtyplqJDa1+irRKOeNB/bOAE=
+github.com/AndrewBewseyTNA/echo/v4 v4.0.0-20230403085805-b70769f7e765/go.mod h1:VzdU5LO3mCTEC2Wkcv3owgbmceIiYStrn1m1xw8QdJo=
 github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 h1:L/gRVlceqvL25UVaW/CKtUDjefjrs0SPonmDGUVOYP0=
 github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161/go.mod h1:xomTg63KZ2rFqZQzSB4Vz2SUXa1BpHTVz9L5PTmPC4E=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=

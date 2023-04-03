@@ -12,10 +12,10 @@ import (
 	"strconv"
 	"strings"
 
+	echoSwagger "github.com/AndrewBewseyTNA/echo-swagger"
+	"github.com/AndrewBewseyTNA/echo/v4"
+	"github.com/AndrewBewseyTNA/echo/v4/middleware"
 	_ "github.com/OurHeritageOurStories/ohos-neptune-ec2-api/docs"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func max(a, b int) int {
@@ -458,7 +458,7 @@ func movingImages(c echo.Context) error {
 
 	jsonToReturn.Items = mainResultStruct.Results.Bindings
 
-	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
+	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 }
 
 // Moving Images Entity godoc
@@ -515,7 +515,7 @@ func movingImagesEntity(c echo.Context) error {
 
 	jsonToReturn.Items = mainResultStruct.Results.Bindings
 
-	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
+	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 }
 
 // @title OHOS api
