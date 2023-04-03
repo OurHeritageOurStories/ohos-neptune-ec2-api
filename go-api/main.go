@@ -12,10 +12,10 @@ import (
 	"strconv"
 	"strings"
 
+	echoSwagger "github.com/AndrewBewseyTNA/echo-swagger"
+	"github.com/AndrewBewseyTNA/echo/v4"
+	"github.com/AndrewBewseyTNA/echo/v4/middleware"
 	_ "github.com/OurHeritageOurStories/ohos-neptune-ec2-api/docs"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func max(a, b int) int {
@@ -60,7 +60,7 @@ type TitleTopicUrlDescriptionBindingStruct struct {
 }
 
 type BindingsTitleTopicUrlDescription struct {
-	Identifier 	IdentifierReturnValues
+	Identifier  IdentifierReturnValues
 	Title       TitleTopicStructValues
 	Description TitleTopicStructValues
 	URL         URLReturnValues
@@ -74,8 +74,8 @@ type URLReturnValues struct {
 }
 
 type IdentifierReturnValues struct {
-	Type     string `json:"type"`
-	Value    string `json:"value"`
+	Type  string `json:"type"`
+	Value string `json:"value"`
 }
 
 // struct for results for title/topic search
@@ -186,7 +186,7 @@ func buildMainSparqlQuery(keyword string, offset string) string {
 }
 
 func buildEntityMainSparqlQuery(id string) string {
-	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ('"+id+"' as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value '"+id+"' .} group by ?title ?description ?url order by ?title OFFSET 0 limit 10"
+	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ('" + id + "' as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value '" + id + "' .} group by ?title ?description ?url order by ?title OFFSET 0 limit 10"
 	return titleTopicURLDescription
 }
 
@@ -453,7 +453,7 @@ func movingImages(c echo.Context) error {
 
 	jsonToReturn.Items = mainResultStruct.Results.Bindings
 
-	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
+	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 }
 
 // Moving Images Entity godoc
@@ -512,7 +512,7 @@ func movingImagesEntity(c echo.Context) error {
 
 	jsonToReturn.Items = mainResultStruct.Results.Bindings
 
-	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
+	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 }
 
 // @title OHOS api
