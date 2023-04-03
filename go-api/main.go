@@ -328,7 +328,7 @@ func movingImages(c echo.Context) error {
 	if len(userProvidedParams) != 2 {
 		return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
 	} else if !qPresent || !pagePresent {
-		return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?page=1&q=glasgow")
+		return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?page=1&q=glasgow")
 	} else {
 		keyword = userProvidedParams.Get("q")
 		pageKeyword = userProvidedParams.Get("page")
