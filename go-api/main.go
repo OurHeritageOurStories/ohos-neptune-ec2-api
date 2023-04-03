@@ -397,18 +397,18 @@ func movingImages(c echo.Context) error {
 
 	//Now that we know the number of pages, we can fill in the various page options
 	jsonToReturn.Total = numberOfResults
-	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/mvingImages?q=" + keyword + "&page=1"
+	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=1"
 	if off == 1 {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=1"
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=1"
 	} else {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(off-1)
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off-1)
 	}
 	if off == maxPages {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 	} else {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(off+1)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off+1)
 	}
-	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 
 	defer countResp.Body.Close()
 
