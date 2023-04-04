@@ -9,6 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type testEnvVars struct {
+}
+
 func TestDocker(t *testing.T) {
 	pool, err := dockertest.NewPool("")
 	require.NoError(t, err, "Not connected to docker")

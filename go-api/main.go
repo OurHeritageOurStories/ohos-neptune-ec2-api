@@ -410,18 +410,18 @@ func movingImages(ec2url, neptuneurl string) echo.HandlerFunc {
 
 		//Now that we know the number of pages, we can fill in the various page options
 		jsonToReturn.Total = numberOfResults
-		jsonToReturn.First = ec2url + "moving-images?q=" + keyword + "&page=1"
+		jsonToReturn.First = ec2url + "/api/moving-images?q=" + keyword + "&page=1"
 		if off == 1 {
-			jsonToReturn.Prev = ec2url + "moving-images?q=" + keyword + "&page=1"
+			jsonToReturn.Prev = ec2url + "/api/moving-images?q=" + keyword + "&page=1"
 		} else {
-			jsonToReturn.Prev = ec2url + "moving-images?q=" + keyword + "&page=" + strconv.Itoa(off-1)
+			jsonToReturn.Prev = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off-1)
 		}
 		if off == maxPages {
-			jsonToReturn.Next = ec2url + "moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+			jsonToReturn.Next = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 		} else {
-			jsonToReturn.Next = ec2url + "moving-images?q=" + keyword + "&page=" + strconv.Itoa(off+1)
+			jsonToReturn.Next = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off+1)
 		}
-		jsonToReturn.Last = ec2url + "moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+		jsonToReturn.Last = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 
 		defer countResp.Body.Close()
 
