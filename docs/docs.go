@@ -121,7 +121,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/moving-images-ent/entity": {
+        "/moving-images-ent/entity/{id}": {
             "get": {
                 "description": "Moving images get specific entity query",
                 "produces": [
@@ -136,7 +136,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "string id",
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],

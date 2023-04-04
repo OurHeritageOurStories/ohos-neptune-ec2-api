@@ -12,10 +12,10 @@ import (
 	"strconv"
 	"strings"
 
+	echoSwagger "github.com/AndrewBewseyTNA/echo-swagger"
+	"github.com/AndrewBewseyTNA/echo/v4"
+	"github.com/AndrewBewseyTNA/echo/v4/middleware"
 	_ "github.com/OurHeritageOurStories/ohos-neptune-ec2-api/docs"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func max(a, b int) int {
@@ -322,8 +322,13 @@ func movingImages(c echo.Context) error {
 
 	//check if we've got both
 
+	_, qPresent := userProvidedParams["q"]
+	_, pagePresent := userProvidedParams["page"]
+
 	if len(userProvidedParams) != 2 {
-		return c.String(http.StatusBadRequest, "You need to provide both a keyword and a page number")
+		return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
+	} else if !qPresent || !pagePresent {
+		return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?page=1&q=glasgow")
 	} else {
 		keyword = userProvidedParams.Get("q")
 		pageKeyword = userProvidedParams.Get("page")
@@ -453,18 +458,18 @@ func movingImages(c echo.Context) error {
 
 	jsonToReturn.Items = mainResultStruct.Results.Bindings
 
-	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
+	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 }
 
 // Moving Images Entity godoc
 // @Summary Moving images get specific entity query
 // @Description Moving images get specific entity query
 // @Tags MovingImages Entity
-// @Param id query string true "string id"
+// @Param id path string true "string id"
 // @Produce json
 // @Success 200 {object} EntityReturnStruct
 // @Failure 500
-// @Router /moving-images-ent/entity [get]
+// @Router /moving-images-ent/entity/{id} [get]
 func movingImagesEntity(c echo.Context) error {
 
 	var jsonToReturn EntityReturnStruct
@@ -510,7 +515,7 @@ func movingImagesEntity(c echo.Context) error {
 
 	jsonToReturn.Items = mainResultStruct.Results.Bindings
 
-	return c.JSONPretty(http.StatusOK, jsonToReturn, " ")
+	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 }
 
 // @title OHOS api
