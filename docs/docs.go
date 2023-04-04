@@ -76,7 +76,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/movingImages": {
+        "/moving-images": {
             "get": {
                 "description": "Moving images queries",
                 "produces": [
@@ -121,7 +121,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/movingImagesEnt/entity/{id}": {
+        "/moving-images-ent/entity/{id}": {
             "get": {
                 "description": "Moving images get specific entity query",
                 "produces": [

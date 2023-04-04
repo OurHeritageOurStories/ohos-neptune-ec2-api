@@ -253,7 +253,7 @@ paths:
       summary: Requests to TNA Discovery API
       tags:
       - Discovery
-  /movingImages:
+  /moving-images:
     get:
       description: Moving images queries
       parameters:
@@ -283,7 +283,7 @@ paths:
       summary: Moving images queries
       tags:
       - MovingImages
-  /movingImagesEnt/entity/{id}:
+  /moving-images-ent/entity/{id}:
     get:
       description: Moving images get specific entity query
       parameters:

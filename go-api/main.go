@@ -307,7 +307,7 @@ func fetchDiscovery(c echo.Context) error {
 // @Success 204
 // @Failure 400
 // @Failure 500
-// @Router /movingImages [get]
+// @Router /moving-images [get]
 func movingImages(c echo.Context) error {
 
 	//default params
@@ -402,18 +402,18 @@ func movingImages(c echo.Context) error {
 
 	//Now that we know the number of pages, we can fill in the various page options
 	jsonToReturn.Total = numberOfResults
-	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/mvingImages?q=" + keyword + "&page=1"
+	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=1"
 	if off == 1 {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=1"
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=1"
 	} else {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(off-1)
+		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off-1)
 	}
 	if off == maxPages {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 	} else {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(off+1)
+		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off+1)
 	}
-	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/movingImages?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 
 	defer countResp.Body.Close()
 
@@ -469,7 +469,7 @@ func movingImages(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} EntityReturnStruct
 // @Failure 500
-// @Router /movingImagesEnt/entity/{id} [get]
+// @Router /moving-images-ent/entity/{id} [get]
 func movingImagesEntity(c echo.Context) error {
 
 	var jsonToReturn EntityReturnStruct
@@ -544,9 +544,9 @@ func main() {
 
 	e.GET("/discovery", fetchDiscovery)
 
-	e.GET("/movingImages", movingImages)
+	e.GET("/moving-images", movingImages)
 
-	e.GET("/movingImagesEnt/entity/:id", movingImagesEntity)
+	e.GET("/moving-images-ent/entity/:id", movingImagesEntity)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
