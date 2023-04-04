@@ -5,11 +5,14 @@ go 1.18
 require (
 	github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230403132604-1a2cc81fb386
 	github.com/joho/godotenv v1.5.1
+	github.com/OurHeritageOurStories/ohos-neptune-ec2-api v0.0.0-20230330104831-7caa277ca305
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/swaggo/echo-swagger v1.4.0
 )
 
 require (
+	github.com/AndrewBewseyTNA/echo-swagger v0.0.0-20230403103356-3aa67e30e23a // indirect
+	github.com/AndrewBewseyTNA/echo/v4 v4.0.0-20230403085805-b70769f7e765 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect

@@ -76,7 +76,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/movingImages": {
+        "/moving-images": {
             "get": {
                 "description": "Moving images queries",
                 "produces": [
@@ -121,6 +121,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/moving-images-ent/entity/{id}": {
+            "get": {
+                "description": "Moving images get specific entity query",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MovingImages Entity"
+                ],
+                "summary": "Moving images get specific entity query",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "string id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.EntityReturnStruct"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/sparql": {
             "post": {
                 "description": "Send sparql direct to neptune",
@@ -148,6 +180,9 @@ const docTemplate = `{
             "properties": {
                 "description": {
                     "$ref": "#/definitions/main.TitleTopicStructValues"
+                },
+                "identifier": {
+                    "$ref": "#/definitions/main.IdentifierReturnValues"
                 },
                 "title": {
                     "$ref": "#/definitions/main.TitleTopicStructValues"
@@ -286,6 +321,28 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "urlParameters": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.EntityReturnStruct": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/main.BindingsTitleTopicUrlDescription"
+                    }
+                }
+            }
+        },
+        "main.IdentifierReturnValues": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "value": {
                     "type": "string"
                 }
             }
