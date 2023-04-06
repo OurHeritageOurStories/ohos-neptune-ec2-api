@@ -50,7 +50,7 @@ func TestEntity(t *testing.T) {
 	neptuneUrl := os.Getenv("NEPTUNE_URL")
 	neptunePort := os.Getenv("NEPTUNE_PORT")
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
-	url := "/movingImagesEnt/entity/(filmRef)5385"
+	url := "/moving-images-ent/entity/(filmRef)5385"
 	e := echo.New()
 	req, err := http.NewRequest(http.MethodPost, url, nil)
 	req.Header.Set("Content-Type", "application/json")
@@ -103,7 +103,7 @@ func TestEntity(t *testing.T) {
 	})
 
 	t.Run("should get error for missing id", func(t *testing.T) {
-		url := "movingImagesEnt/"
+		url := "moving-images-ent/"
 		e := echo.New()
 		req, err := http.NewRequest(http.MethodPost, url, nil)
 		req.Header.Set("Content-Type", "application/json")
@@ -349,7 +349,7 @@ func TestMovingImages(t *testing.T) {
 	neptunePort := os.Getenv("NEPTUNE_PORT")
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
-	url := "movingImages?q=glasgow&page=1"
+	url := "moving-images?q=glasgow&page=1"
 	e := echo.New()
 	req, err := http.NewRequest(http.MethodPost, url, nil)
 	req.Header.Set("Content-Type", "application/json")
@@ -370,7 +370,7 @@ func TestMovingImages(t *testing.T) {
 	})
 
 	t.Run("should get error for missing page param", func(t *testing.T) {
-		url := "movingImages?q=glasgow"
+		url := "moving-images?q=glasgow"
 		e := echo.New()
 		req, err := http.NewRequest(http.MethodPost, url, nil)
 		req.Header.Set("Content-Type", "application/json")
@@ -389,7 +389,7 @@ func TestMovingImages(t *testing.T) {
 	})
 
 	t.Run("should get error for missing query param", func(t *testing.T) {
-		url := "movingImages?page=1"
+		url := "moving-images?page=1"
 		e := echo.New()
 		req, err := http.NewRequest(http.MethodPost, url, nil)
 		req.Header.Set("Content-Type", "application/json")
@@ -408,7 +408,7 @@ func TestMovingImages(t *testing.T) {
 	})
 
 	t.Run("should get error for page provided as string", func(t *testing.T) {
-		url := "movingImages?q=glasgow&page=string"
+		url := "moving-images?q=glasgow&page=string"
 		e := echo.New()
 		req, err := http.NewRequest(http.MethodPost, url, nil)
 		req.Header.Set("Content-Type", "application/json")
@@ -427,7 +427,7 @@ func TestMovingImages(t *testing.T) {
 	})
 
 	t.Run("should not get data for page greater than max page", func(t *testing.T) {
-		url := "movingImages?q=glasgow&page=2500"
+		url := "moving-images?q=glasgow&page=2500"
 		e := echo.New()
 		req, err := http.NewRequest(http.MethodPost, url, nil)
 		req.Header.Set("Content-Type", "application/json")
@@ -446,7 +446,7 @@ func TestMovingImages(t *testing.T) {
 	})
 
 	t.Run("should not get data for non-existing keyword", func(t *testing.T) {
-		url := "movingImages?q=harshad&page=1"
+		url := "moving-images?q=harshad&page=1"
 		e := echo.New()
 		req, err := http.NewRequest(http.MethodPost, url, nil)
 		req.Header.Set("Content-Type", "application/json")
@@ -479,7 +479,7 @@ func TestFailOnPurpose(t *testing.T) {
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
 	t.Run("should not get data for non-existing keyword", func(t *testing.T) {
-		url := "movingImages?q=harshad&page=1"
+		url := "moving-images?q=harshad&page=1"
 		e := echo.New()
 		req, err := http.NewRequest(http.MethodPost, url, nil)
 		req.Header.Set("Content-Type", "application/json")

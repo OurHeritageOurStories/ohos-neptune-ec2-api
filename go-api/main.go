@@ -26,10 +26,6 @@ func max(a, b int) int {
 	return b
 }
 
-type envVariables struct {
-	TestString string
-}
-
 type RDFHeadResponse struct {
 	Vars []string
 }
