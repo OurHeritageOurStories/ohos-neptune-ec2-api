@@ -33,7 +33,9 @@ services:
         methods:
           - GET
   '
+cd go-api/
 go test -v
+cd ../
 
 # TODO if tests work, do the below, else do something else
 docker compose down
