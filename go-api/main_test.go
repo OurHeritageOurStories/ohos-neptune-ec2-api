@@ -384,7 +384,7 @@ func TestMovingImages(t *testing.T) {
 		defer res.Body.Close()
 		if assert.NoError(t, movingImages(ec2fullurl, neptuneFullSparqlUrl)(c)) {
 			assert.Equal(t, http.StatusOK, res.StatusCode, "http status code")
-			assert.Contains(t, rec.Body.String(), "You need to provide both a keyword and a page number", "Not throwing error")
+			assert.Contains(t, rec.Body.String(), "You need to provide both a keyword (as q) and a page number", "Not throwing error")
 		}
 	})
 
@@ -403,7 +403,7 @@ func TestMovingImages(t *testing.T) {
 		defer res.Body.Close()
 		if assert.NoError(t, movingImages(ec2fullurl, neptuneFullSparqlUrl)(c)) {
 			assert.Equal(t, http.StatusOK, res.StatusCode, "http status code")
-			assert.Contains(t, rec.Body.String(), "You need to provide both a keyword and a page number", "Not throwing error")
+			assert.Contains(t, rec.Body.String(), "You need to provide both a keyword (as q) and a page number", "Not throwing error")
 		}
 	})
 
