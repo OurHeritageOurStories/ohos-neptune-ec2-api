@@ -337,7 +337,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerF
 		if len(userProvidedParams) != 2 {
 			return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
 		} else if !qPresent || !pagePresent {
-			return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example"+ec2url+" /api/moving-images?page=1&q=glasgow")
+			return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example"+ec2url+" /api/"+movingImagesEndpoint+"?q=glasgow&page=1")
 		} else {
 			keyword = userProvidedParams.Get("q")
 			pageKeyword = userProvidedParams.Get("page")
