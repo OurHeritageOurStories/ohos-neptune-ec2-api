@@ -26,6 +26,8 @@ services:
     image: public.ecr.aws/j8z6n5u1/data-go-api:latest
     hostname: goapi
     container_name: goapi
+    env_file:
+      - ${CURRENT_ENV}.env
     ports:
       - "9000:9000"
 

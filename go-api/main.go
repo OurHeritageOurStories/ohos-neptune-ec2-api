@@ -16,7 +16,6 @@ import (
 	"github.com/AndrewBewseyTNA/echo/v4"
 	"github.com/AndrewBewseyTNA/echo/v4/middleware"
 	_ "github.com/OurHeritageOurStories/ohos-neptune-ec2-api/docs"
-	"github.com/joho/godotenv"
 )
 
 func max(a, b int) int {
@@ -118,7 +117,7 @@ type EntityReturnStruct struct {
 
 type KeywordStruct struct {
 	Page    string `json:"page"`
-	Keyword string `json:"keyword"`
+	Keyword string `json:"q"`
 }
 
 //Discovery held by all result
@@ -277,8 +276,9 @@ func requestToNeptune(neptuneurl string) echo.HandlerFunc {
 // @Router /discovery [get]
 func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
-		keyword := c.Param("q")
-		source := c.Param("source")
+		userProvidedParams := c.QueryParams()
+		keyword := strings.Replace(userProvidedParams.Get("q"), " ", "%20", 1)
+		source := strings.ToUpper(userProvidedParams.Get("source"))
 
 		if source == "" {
 			source = "ALL"
@@ -317,7 +317,7 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 // @Failure 400
 // @Failure 500
 // @Router /moving-images [get]
-func movingImages(ec2url, neptuneurl string) echo.HandlerFunc {
+func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
 		//default params
 		keyword := "glasgow"
@@ -337,7 +337,7 @@ func movingImages(ec2url, neptuneurl string) echo.HandlerFunc {
 		if len(userProvidedParams) != 2 {
 			return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
 		} else if !qPresent || !pagePresent {
-			return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?page=1&q=glasgow")
+			return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example"+ec2url+" /api/moving-images?page=1&q=glasgow")
 		} else {
 			keyword = userProvidedParams.Get("q")
 			pageKeyword = userProvidedParams.Get("page")
@@ -411,18 +411,18 @@ func movingImages(ec2url, neptuneurl string) echo.HandlerFunc {
 
 		//Now that we know the number of pages, we can fill in the various page options
 		jsonToReturn.Total = numberOfResults
-		jsonToReturn.First = ec2url + "/api/moving-images?q=" + keyword + "&page=1"
+		jsonToReturn.First = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=1"
 		if off == 1 {
-			jsonToReturn.Prev = ec2url + "/api/moving-images?q=" + keyword + "&page=1"
+			jsonToReturn.Prev = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=1"
 		} else {
-			jsonToReturn.Prev = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off-1)
+			jsonToReturn.Prev = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(off-1)
 		}
 		if off == maxPages {
-			jsonToReturn.Next = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+			jsonToReturn.Next = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 		} else {
-			jsonToReturn.Next = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off+1)
+			jsonToReturn.Next = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(off+1)
 		}
-		jsonToReturn.Last = ec2url + "/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+		jsonToReturn.Last = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 
 		defer countResp.Body.Close()
 
@@ -542,18 +542,13 @@ func movingImagesEntity(neptuneurl string) echo.HandlerFunc {
 // @BasePath /api
 func main() {
 
-	//err := godotenv.Load()
-	currentEnv := os.Getenv("CURRENT_ENV")
-	err := godotenv.Load(currentEnv + ".env")
-	if err != nil {
-		log.Fatal("GoDotEnv didn't load properly")
-	}
 	welcomeString := os.Getenv("WELCOME_STRING")
 	ec2url := os.Getenv("EC2_URL")
 	ec2port := os.Getenv("EC2_PORT")
 	neptuneUrl := os.Getenv("NEPTUNE_URL")
 	neptunePort := os.Getenv("NEPTUNE_PORT")
 	discoveryAPIurl := os.Getenv("DISCOVERY_API")
+	movingImagesEndpoint := os.Getenv("MOVING_IMAGES_ENDPOINT")
 
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
@@ -573,7 +568,7 @@ func main() {
 
 	e.GET("/discovery", fetchDiscovery(discoveryAPIurl))
 
-	e.GET("/moving-images", movingImages(ec2fullurl, neptuneFullSparqlUrl))
+	e.GET("/moving-images", movingImages(ec2fullurl, neptuneFullSparqlUrl, movingImagesEndpoint))
 
 	e.GET("/moving-images-ent/entity/:id", movingImagesEntity(neptuneFullSparqlUrl))
 
