@@ -117,7 +117,7 @@ type EntityReturnStruct struct {
 
 type KeywordStruct struct {
 	Page    string `json:"page"`
-	Keyword string `json:"keyword"`
+	Keyword string `json:"q"`
 }
 
 //Discovery held by all result
@@ -197,8 +197,11 @@ func buildEntityMainSparqlQuery(id string) string {
 // @Produce plain
 // @Success 200
 // @Router / [get]
-func helloResponse(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, you've reached the Go API that lets you talk to the Neptune database. Well done!")
+func helloResponse(welcome string) echo.HandlerFunc {
+	fn := func(c echo.Context) error {
+		return c.String(http.StatusOK, welcome)
+	}
+	return echo.HandlerFunc(fn)
 }
 
 // NeptuneSparql godoc
@@ -209,55 +212,57 @@ func helloResponse(c echo.Context) error {
 // @Produce json
 // @Success 200
 // @Router /sparql [post]
-func requestToNeptune(c echo.Context) error {
+func requestToNeptune(neptuneurl string) echo.HandlerFunc {
+	fn := func(c echo.Context) error {
+		sparqlString := c.FormValue("sparqlquery")
 
-	sparqlString := c.FormValue("sparqlquery")
+		limit := c.FormValue("limit")
+		limitInt, err := strconv.Atoi(limit)
+		if err != nil {
+			return c.String(http.StatusBadRequest, "Limit needs to be a number")
+		}
 
-	limit := c.FormValue("limit")
-	limitInt, err := strconv.Atoi(limit)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Limit needs to be a number")
+		maxLimit := os.Getenv("LIMIT")
+		maxLimitInt, err2 := strconv.Atoi(maxLimit)
+		if err2 != nil {
+			return c.String(http.StatusInternalServerError, "Max limit not a number")
+		}
+
+		var limitToUse int
+		if limitInt > maxLimitInt {
+			limitToUse = maxLimitInt
+		} else {
+			limitToUse = limitInt
+		}
+
+		constructedQuery := sparqlString + " LIMIT " + strconv.Itoa(limitToUse)
+
+		params := url.Values{}
+		params.Add("query", constructedQuery)
+		body := strings.NewReader(params.Encode())
+
+		req, err := http.NewRequest("POST", neptuneurl, body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer resp.Body.Close()
+
+		data, _ := ioutil.ReadAll(resp.Body)
+
+		var jsonMap map[string]interface{}
+
+		json.Unmarshal([]byte(data), &jsonMap)
+
+		return c.JSONPretty(http.StatusOK, jsonMap, " ")
 	}
-
-	maxLimit := os.Getenv("LIMIT")
-	maxLimitInt, err2 := strconv.Atoi(maxLimit)
-	if err2 != nil {
-		return c.String(http.StatusInternalServerError, "Max limit not a number")
-	}
-
-	var limitToUse int
-	if limitInt > maxLimitInt {
-		limitToUse = maxLimitInt
-	} else {
-		limitToUse = limitInt
-	}
-
-	constructedQuery := sparqlString + " LIMIT " + strconv.Itoa(limitToUse)
-
-	params := url.Values{}
-	params.Add("query", constructedQuery)
-	body := strings.NewReader(params.Encode())
-
-	req, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer resp.Body.Close()
-
-	data, _ := ioutil.ReadAll(resp.Body)
-
-	var jsonMap map[string]interface{}
-
-	json.Unmarshal([]byte(data), &jsonMap)
-
-	return c.JSONPretty(http.StatusOK, jsonMap, " ")
+	return echo.HandlerFunc(fn)
 }
 
 // Discovery godoc
@@ -269,31 +274,35 @@ func requestToNeptune(c echo.Context) error {
 // @Param source query string true "string sourceArchives"
 // @Success 200 {object} discoveryAllStruct
 // @Router /discovery [get]
-func fetchDiscovery(c echo.Context) error {
-	keyword := c.Param("q")
-	source := c.Param("source")
+func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
+	fn := func(c echo.Context) error {
+		userProvidedParams := c.QueryParams()
+		keyword := strings.Replace(userProvidedParams.Get("q"), " ", "%20", 1)
+		source := strings.ToUpper(userProvidedParams.Get("source"))
 
-	if source == "" {
-		source = "ALL"
+		if source == "" {
+			source = "ALL"
+		}
+
+		response, err := http.Get(discoveryapiurl + "records?sps.heldByCode=" + source + "&sps.searchQuery=" + keyword)
+
+		if err != nil {
+			fmt.Print(err.Error())
+			os.Exit(1)
+		}
+
+		responseData, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var jsonMap map[string]interface{}
+
+		json.Unmarshal([]byte(responseData), &jsonMap)
+
+		return c.JSONPretty(http.StatusOK, jsonMap, " ")
 	}
-
-	response, err := http.Get("https://discovery.nationalarchives.gov.uk/API/search/records?sps.heldByCode=" + source + "&sps.searchQuery=" + keyword)
-
-	if err != nil {
-		fmt.Print(err.Error())
-		os.Exit(1)
-	}
-
-	responseData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var jsonMap map[string]interface{}
-
-	json.Unmarshal([]byte(responseData), &jsonMap)
-
-	return c.JSONPretty(http.StatusOK, jsonMap, " ")
+	return echo.HandlerFunc(fn)
 }
 
 // Moving Images godoc
@@ -308,157 +317,159 @@ func fetchDiscovery(c echo.Context) error {
 // @Failure 400
 // @Failure 500
 // @Router /moving-images [get]
-func movingImages(c echo.Context) error {
+func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerFunc {
+	fn := func(c echo.Context) error {
+		//default params
+		keyword := "glasgow"
+		pageKeyword := "1"
+		pageInt := 1
+		numberOfResults := 0
 
-	//default params
-	keyword := "glasgow"
-	pageKeyword := "1"
-	pageInt := 1
-	numberOfResults := 0
+		var jsonToReturn keywordReturnStruct
 
-	var jsonToReturn keywordReturnStruct
+		userProvidedParams := c.QueryParams()
 
-	userProvidedParams := c.QueryParams()
+		//check if we've got both
 
-	//check if we've got both
+		_, qPresent := userProvidedParams["q"]
+		_, pagePresent := userProvidedParams["page"]
 
-	_, qPresent := userProvidedParams["q"]
-	_, pagePresent := userProvidedParams["page"]
+		if len(userProvidedParams) != 2 {
+			return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
+		} else if !qPresent || !pagePresent {
+			return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example"+ec2url+" /api/"+movingImagesEndpoint+"?q=glasgow&page=1")
+		} else {
+			keyword = userProvidedParams.Get("q")
+			pageKeyword = userProvidedParams.Get("page")
+			jsonToReturn.Id.Keyword = keyword
+			jsonToReturn.Id.Page = pageKeyword
+		}
 
-	if len(userProvidedParams) != 2 {
-		return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
-	} else if !qPresent || !pagePresent {
-		return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?page=1&q=glasgow")
-	} else {
-		keyword = userProvidedParams.Get("q")
-		pageKeyword = userProvidedParams.Get("page")
-		jsonToReturn.Id.Keyword = keyword
-		jsonToReturn.Id.Page = pageKeyword
+		pageInt, err := strconv.Atoi(pageKeyword)
+		if err != nil {
+			return c.String(http.StatusBadRequest, "Page needs to be selected as a number")
+		}
+
+		if pageInt < 1 {
+			return c.String(http.StatusRequestedRangeNotSatisfiable, "If you are looking for the first page, please request page 1 (this is to align with the UI). If you are looking for page -1 or lower, those don't exist.")
+		}
+
+		off := max(1, pageInt)
+
+		offset := strconv.Itoa((off - 1) * 10)
+
+		//check if there are any actual results
+
+		countQuery := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
+
+		countParams := url.Values{}
+		countParams.Add("query", countQuery)
+		countParams.Add("format", "json")
+		countBody := strings.NewReader(countParams.Encode())
+
+		countReq, err := http.NewRequest("POST", neptuneurl, countBody)
+
+		if err != nil {
+			log.Fatal(err)
+			return c.String(http.StatusInternalServerError, "Something went wrong sending the request to the database.")
+		}
+
+		countReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		countResp, err := http.DefaultClient.Do(countReq)
+
+		if err != nil {
+			log.Fatal(err)
+			return c.String(http.StatusInternalServerError, "Something went wrong getting the result from the database.")
+		}
+
+		// map the response to the "count" struct
+
+		var countStruct resultsCountStruct
+
+		countData, err := ioutil.ReadAll(countResp.Body)
+
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Something went wrong reading the number of responses.")
+		}
+
+		if err := json.Unmarshal(countData, &countStruct); err != nil {
+			return c.String(http.StatusInternalServerError, "Something went wrong working with the number of responses")
+		}
+
+		numberOfResults, err = strconv.Atoi(countStruct.Results.Bindings[0].Count.Value)
+
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Something went wrong as the number of results isn't a number")
+		}
+
+		if numberOfResults < 1 {
+			return c.String(http.StatusNoContent, "The search worked, there just aren't any results") // No Content doesn't send a return string, which makes sense, as that'd be some content
+		}
+
+		maxPages := int(math.Ceil(float64(numberOfResults) / 10)) //odd way to do it, but that's what the linter did to it
+
+		//Now that we know the number of pages, we can fill in the various page options
+		jsonToReturn.Total = numberOfResults
+		jsonToReturn.First = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=1"
+		if off == 1 {
+			jsonToReturn.Prev = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=1"
+		} else {
+			jsonToReturn.Prev = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(off-1)
+		}
+		if off == maxPages {
+			jsonToReturn.Next = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+		} else {
+			jsonToReturn.Next = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(off+1)
+		}
+		jsonToReturn.Last = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
+
+		defer countResp.Body.Close()
+
+		//Now, we do the actual query
+
+		mainSearchQuery := buildMainSparqlQuery(keyword, offset)
+
+		mainSearchParams := url.Values{}
+		mainSearchParams.Add("query", mainSearchQuery)
+		mainSearchParams.Add("format", "json")
+		mainSearchBody := strings.NewReader(mainSearchParams.Encode())
+
+		mainSearchReq, err := http.NewRequest("POST", neptuneurl, mainSearchBody)
+
+		if err != nil {
+			log.Fatal(err)
+			return c.String(http.StatusInternalServerError, "Something went wrong sending the main request to the database.")
+		}
+
+		mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		mainSearchResp, err := http.DefaultClient.Do(mainSearchReq)
+
+		if err != nil {
+			log.Fatal(err)
+			return c.String(http.StatusInternalServerError, "Something went wrong getting the main result from the database.")
+		}
+
+		// Map the main response to the struct
+
+		var mainResultStruct movingImagesTitleTopicUrlDesc
+
+		mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
+
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Something went wrong reading the main response.")
+		}
+
+		if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
+			return c.String(http.StatusInternalServerError, "Something went wrong working with the main results.")
+		}
+
+		jsonToReturn.Items = mainResultStruct.Results.Bindings
+
+		return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 	}
-
-	pageInt, err := strconv.Atoi(pageKeyword)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "Page needs to be selected as a number")
-	}
-
-	if pageInt < 1 {
-		return c.String(http.StatusRequestedRangeNotSatisfiable, "If you are looking for the first page, please request page 1 (this is to align with the UI). If you are looking for page -1 or lower, those don't exist.")
-	}
-
-	off := max(1, pageInt)
-
-	offset := strconv.Itoa((off - 1) * 10)
-
-	//check if there are any actual results
-
-	countQuery := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select (count(*) as ?count) where {select ?title (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:subject _:subject ._:subject rdfs:label ?topic .} group by ?title order by desc(?count)}"
-
-	countParams := url.Values{}
-	countParams.Add("query", countQuery)
-	countParams.Add("format", "json")
-	countBody := strings.NewReader(countParams.Encode())
-
-	countReq, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", countBody)
-
-	if err != nil {
-		log.Fatal(err)
-		return c.String(http.StatusInternalServerError, "Something went wrong sending the request to the database.")
-	}
-
-	countReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	countResp, err := http.DefaultClient.Do(countReq)
-
-	if err != nil {
-		log.Fatal(err)
-		return c.String(http.StatusInternalServerError, "Something went wrong getting the result from the database.")
-	}
-
-	// map the response to the "count" struct
-
-	var countStruct resultsCountStruct
-
-	countData, err := ioutil.ReadAll(countResp.Body)
-
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Something went wrong reading the number of responses.")
-	}
-
-	if err := json.Unmarshal(countData, &countStruct); err != nil {
-		return c.String(http.StatusInternalServerError, "Something went wrong working with the number of responses")
-	}
-
-	numberOfResults, err = strconv.Atoi(countStruct.Results.Bindings[0].Count.Value)
-
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Something went wrong as the number of results isn't a number")
-	}
-
-	if numberOfResults < 1 {
-		return c.String(http.StatusNoContent, "The search worked, there just aren't any results") // No Content doesn't send a return string, which makes sense, as that'd be some content
-	}
-
-	maxPages := int(math.Ceil(float64(numberOfResults) / 10)) //odd way to do it, but that's what the linter did to it
-
-	//Now that we know the number of pages, we can fill in the various page options
-	jsonToReturn.Total = numberOfResults
-	jsonToReturn.First = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=1"
-	if off == 1 {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=1"
-	} else {
-		jsonToReturn.Prev = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off-1)
-	}
-	if off == maxPages {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
-	} else {
-		jsonToReturn.Next = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(off+1)
-	}
-	jsonToReturn.Last = "http://ec2-13-40-156-226.eu-west-2.compute.amazonaws.com:5000/api/moving-images?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
-
-	defer countResp.Body.Close()
-
-	//Now, we do the actual query
-
-	mainSearchQuery := buildMainSparqlQuery(keyword, offset)
-
-	mainSearchParams := url.Values{}
-	mainSearchParams.Add("query", mainSearchQuery)
-	mainSearchParams.Add("format", "json")
-	mainSearchBody := strings.NewReader(mainSearchParams.Encode())
-
-	mainSearchReq, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", mainSearchBody)
-
-	if err != nil {
-		log.Fatal(err)
-		return c.String(http.StatusInternalServerError, "Something went wrong sending the main request to the database.")
-	}
-
-	mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	mainSearchResp, err := http.DefaultClient.Do(mainSearchReq)
-
-	if err != nil {
-		log.Fatal(err)
-		return c.String(http.StatusInternalServerError, "Something went wrong getting the main result from the database.")
-	}
-
-	// Map the main response to the struct
-
-	var mainResultStruct movingImagesTitleTopicUrlDesc
-
-	mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
-
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Something went wrong reading the main response.")
-	}
-
-	if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
-		return c.String(http.StatusInternalServerError, "Something went wrong working with the main results.")
-	}
-
-	jsonToReturn.Items = mainResultStruct.Results.Bindings
-
-	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
+	return echo.HandlerFunc(fn)
 }
 
 // Moving Images Entity godoc
@@ -470,52 +481,54 @@ func movingImages(c echo.Context) error {
 // @Success 200 {object} EntityReturnStruct
 // @Failure 500
 // @Router /moving-images-ent/entity/{id} [get]
-func movingImagesEntity(c echo.Context) error {
+func movingImagesEntity(neptuneurl string) echo.HandlerFunc {
+	fn := func(c echo.Context) error {
+		var jsonToReturn EntityReturnStruct
 
-	var jsonToReturn EntityReturnStruct
+		id := c.Param("id")
 
-	id := c.Param("id")
+		mainSearchQuery := buildEntityMainSparqlQuery(id)
 
-	mainSearchQuery := buildEntityMainSparqlQuery(id)
+		mainSearchParams := url.Values{}
+		mainSearchParams.Add("query", mainSearchQuery)
+		mainSearchParams.Add("format", "json")
+		mainSearchBody := strings.NewReader(mainSearchParams.Encode())
 
-	mainSearchParams := url.Values{}
-	mainSearchParams.Add("query", mainSearchQuery)
-	mainSearchParams.Add("format", "json")
-	mainSearchBody := strings.NewReader(mainSearchParams.Encode())
+		mainSearchReq, err := http.NewRequest("POST", neptuneurl, mainSearchBody)
 
-	mainSearchReq, err := http.NewRequest("POST", "https://ohos-live-data-neptune.cluster-ro-c7ehmaoz3lrl.eu-west-2.neptune.amazonaws.com:8182/sparql", mainSearchBody)
+		if err != nil {
+			log.Fatal(err)
+			return c.String(http.StatusInternalServerError, "Something went wrong sending the main request to the database.")
+		}
 
-	if err != nil {
-		log.Fatal(err)
-		return c.String(http.StatusInternalServerError, "Something went wrong sending the main request to the database.")
+		mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		mainSearchResp, err := http.DefaultClient.Do(mainSearchReq)
+
+		if err != nil {
+			log.Fatal(err)
+			return c.String(http.StatusInternalServerError, "Something went wrong getting the main result from the database.")
+		}
+
+		// Map the main response to the struct
+
+		var mainResultStruct movingImagesTitleTopicUrlDesc
+
+		mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
+
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "Something went wrong reading the main response.")
+		}
+
+		if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
+			return c.String(http.StatusInternalServerError, "Something went wrong working with the main results.")
+		}
+
+		jsonToReturn.Items = mainResultStruct.Results.Bindings
+
+		return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
 	}
-
-	mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	mainSearchResp, err := http.DefaultClient.Do(mainSearchReq)
-
-	if err != nil {
-		log.Fatal(err)
-		return c.String(http.StatusInternalServerError, "Something went wrong getting the main result from the database.")
-	}
-
-	// Map the main response to the struct
-
-	var mainResultStruct movingImagesTitleTopicUrlDesc
-
-	mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
-
-	if err != nil {
-		return c.String(http.StatusInternalServerError, "Something went wrong reading the main response.")
-	}
-
-	if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
-		return c.String(http.StatusInternalServerError, "Something went wrong working with the main results.")
-	}
-
-	jsonToReturn.Items = mainResultStruct.Results.Bindings
-
-	return c.JSONNonEncodePretty(http.StatusOK, jsonToReturn, " ")
+	return echo.HandlerFunc(fn)
 }
 
 // @title OHOS api
@@ -529,6 +542,17 @@ func movingImagesEntity(c echo.Context) error {
 // @BasePath /api
 func main() {
 
+	welcomeString := os.Getenv("WELCOME_STRING")
+	ec2url := os.Getenv("EC2_URL")
+	ec2port := os.Getenv("EC2_PORT")
+	neptuneUrl := os.Getenv("NEPTUNE_URL")
+	neptunePort := os.Getenv("NEPTUNE_PORT")
+	discoveryAPIurl := os.Getenv("DISCOVERY_API")
+	movingImagesEndpoint := os.Getenv("MOVING_IMAGES_ENDPOINT")
+
+	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
+	ec2fullurl := ec2url + ":" + ec2port
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -538,15 +562,15 @@ func main() {
 		AllowOrigins: []string{"*"},
 	}))
 
-	e.GET("/", helloResponse)
+	e.GET("/", helloResponse(welcomeString))
 
-	e.POST("/sparql", requestToNeptune) //to pass requests directly through
+	e.POST("/sparql", requestToNeptune(neptuneFullSparqlUrl)) //to pass requests directly through
 
-	e.GET("/discovery", fetchDiscovery)
+	e.GET("/discovery", fetchDiscovery(discoveryAPIurl))
 
-	e.GET("/moving-images", movingImages)
+	e.GET("/moving-images", movingImages(ec2fullurl, neptuneFullSparqlUrl, movingImagesEndpoint))
 
-	e.GET("/moving-images-ent/entity/:id", movingImagesEntity)
+	e.GET("/moving-images-ent/entity/:id", movingImagesEntity(neptuneFullSparqlUrl))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
