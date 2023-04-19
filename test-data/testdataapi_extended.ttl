@@ -551,6 +551,59 @@ cat:203024.1 a premis:IntellectualEntity ;
     ];
     prov:specialisationOf cat:203024 .
 
+cat:203124.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Defence against the Dark Arts was Ron's best subject</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203024.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Ron Weasley";
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203124 .
+
+cat:203224.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Defence against the Dark Arts was a subject at Hogwarts</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203024.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203224 .
+
 cat:203025.1 a premis:IntellectualEntity ;
     cat:created                    [ a                  time:ProperInterval ;
                                          dct:description    "1989 Jan 1 - 1990 Dec 31" ;
@@ -634,6 +687,35 @@ cat:203027.1 a premis:IntellectualEntity ;
         rdf:Temporal "1900-01-12";
     ];
     prov:specialisationOf cat:203027 .
+
+cat:203127.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Tom Riddle went at school with Hagrid in 1899</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203027.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Hagrid";
+        rdf:Agent "Tom Riddle";
+        rdf:Place "Hogwarts";
+        rdf:Temporal "1899-01-12";
+    ];
+    prov:specialisationOf cat:203127 .
 
 cat:203028.1 a premis:IntellectualEntity ;
     cat:created                    [ a                  time:ProperInterval ;
