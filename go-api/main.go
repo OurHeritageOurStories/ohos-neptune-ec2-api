@@ -334,13 +334,15 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerF
 		_, qPresent := userProvidedParams["q"]
 		_, pagePresent := userProvidedParams["page"]
 
-		if len(userProvidedParams) != 2 {
-			return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
-		} else if !qPresent || !pagePresent {
-			return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example"+ec2url+" /api/"+movingImagesEndpoint+"?q=glasgow&page=1")
+		if len(userProvidedParams) == 0 {
+			return c.String(http.StatusBadRequest, "You need to provide both a search term (as q) and a page number (as page). Copy this example "+ec2url+"/api/"+movingImagesEndpoint+"?q=glasgow&page=1")
+		} else if !qPresent && pagePresent {
+			return c.String(http.StatusBadRequest, "You need to provide a search term (as q). Copy this example "+ec2url+"/api/"+movingImagesEndpoint+"?q=glasgow&page=1")
 		} else {
+			if pagePresent {
+				pageKeyword = userProvidedParams.Get("page") //only get the new page number if its provided, else use the default
+			}
 			keyword = userProvidedParams.Get("q")
-			pageKeyword = userProvidedParams.Get("page")
 			jsonToReturn.Id.Keyword = keyword
 			jsonToReturn.Id.Page = pageKeyword
 		}
