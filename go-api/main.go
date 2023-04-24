@@ -310,7 +310,7 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 // @Description Moving images queries
 // @Tags MovingImages
 // @Param q query string true "string query"
-// @Param page query int true "int page"
+// @Param page query int false "int page"
 // @Produce json
 // @Success 200 {object} keywordReturnStruct
 // @Success 204
