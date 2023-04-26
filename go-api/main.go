@@ -40,13 +40,7 @@ type ResultsCount struct {
 }
 
 type ResultsBindings struct {
-	Count resultsBindingCount
-}
-
-type resultsBindingCount struct {
-	Datatype string `json: datatype`
-	Type     string `json: type`
-	Value    string `json: value`
+	Count DatatypeTypeValue
 }
 
 //struct for results for title/topic/url/description in movingImages
@@ -60,22 +54,17 @@ type TitleTopicUrlDescriptionBindingStruct struct {
 }
 
 type BindingsTitleTopicUrlDescription struct {
-	Identifier  IdentifierReturnValues
-	Title       TitleTopicStructValues
-	Description TitleTopicStructValues
-	URL         URLReturnValues
-	Topics      TitleTopicStructValues
+	Identifier  TypeValeStruct
+	Title       TypeValeStruct
+	Description TypeValeStruct
+	URL         DatatypeTypeValue
+	Topics      TypeValeStruct
 }
 
-type URLReturnValues struct {
+type DatatypeTypeValue struct {
 	Datatype string `json:"datatype"`
 	Type     string `json:"type"`
 	Value    string `json:"value"`
-}
-
-type IdentifierReturnValues struct {
-	Type  string `json:"type"`
-	Value string `json:"value"`
 }
 
 // struct for results for title/topic search
@@ -90,11 +79,11 @@ type TitleTopicBindingsStruct struct {
 }
 
 type BindingsResultsTitleTopic struct {
-	Title  TitleTopicStructValues `json:"title"`
-	Topics TitleTopicStructValues `json:"topics"`
+	Title  TypeValeStruct `json:"title"`
+	Topics TypeValeStruct `json:"topics"`
 }
 
-type TitleTopicStructValues struct {
+type TypeValeStruct struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`
 }
