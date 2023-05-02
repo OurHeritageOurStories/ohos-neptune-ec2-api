@@ -1,0 +1,989 @@
+@prefix premis: <http://www.loc.gov/premis/rdf/v3/> .
+@prefix schema: <https://schema.org/> .
+@prefix ver:   <http://purl.org/linked-data/version#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix edm:   <http://www.europeana.eu/schemas/edm/> .
+@prefix rst:   <http://id.loc.gov/vocabulary/relationshipSubType/> .
+@prefix rdau:  <http://rdaregistry.info/Elements/u/> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cat:   <http://cat.nationalarchives.gov.uk/> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix iso639-2: <http://id.loc.gov/vocabulary/iso639-2/> .
+@prefix erar: <http://id.loc.gov/vocabulary/erar/> .
+@prefix eror: <http://id.loc.gov/vocabulary/eror/> .
+
+cat:ActivityC a prov:Activity ;
+    dct:identifier "ActivityC" ;
+    dct:title "creation of test record cat:203012" ;
+    erar:exe cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out  cat:203012 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime "2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityD a prov:Activity ;
+    dct:identifier "ActivityD" ;
+    dct:title "creation of test record cat:203013" ;
+    erar:exe cat:ILBD2OmegaOHOSAI ;
+    erar:imp cat:ValentinaVavassori ;
+    eror:out cat:203013 ;
+    prov:endedAtTime "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime "2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityE a prov:Activity ;
+    dct:identifier "ActivityE" ;
+    dct:title "creation of test record cat:203014" ;
+    erar:exe cat:ILBD2OmegaOHOSAI ;
+    erar:imp cat:ValentinaVavassori ;
+    eror:out cat:203014 ;
+    prov:endedAtTime "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime "2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityF a prov:Activity ;
+    dct:identifier "ActivityF" ;
+    dct:title "creation of test record cat:203015" ;
+    erar:exe cat:ILBD2OmegaOHOSAI ;
+    erar:imp cat:ValentinaVavassori ;
+    eror:out cat:203015 ;
+    prov:endedAtTime "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime "2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityG a prov:Activity ;
+    dct:identifier "ActivityG" ;
+    dct:title "creation of test record cat:203016" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203016 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityH a prov:Activity ;
+    dct:identifier  "ActivityH" ;
+    dct:title "creation of test record cat:203017" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203017 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityI a prov:Activity ;
+    dct:identifier  "ActivityI" ;
+    dct:title "creation of test record cat:203018" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203018 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityJ a prov:Activity ;
+    dct:identifier  "ActivityJ" ;
+    dct:title "creation of test record cat:203019" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203019 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityK a prov:Activity ;
+    dct:identifier  "ActivityK" ;
+    dct:title "creation of test record cat:203020" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203020 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityL a prov:Activity ;
+    dct:identifier  "ActivityL" ;
+    dct:title "creation of test record cat:203021" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203021 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityM a prov:Activity ;
+    dct:identifier  "ActivityM" ;
+    dct:title "creation of test record cat:203022" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203022 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityN a prov:Activity ;
+    dct:identifier  "ActivityN" ;
+    dct:title "creation of test record cat:203023" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203023 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityO a prov:Activity ;
+    dct:identifier  "ActivityO" ;
+    dct:title "creation of test record cat:203024" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203024 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityP a prov:Activity ;
+    dct:identifier  "ActivityP" ;
+    dct:title "creation of test record cat:203025" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203025 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityQ a prov:Activity ;
+    dct:identifier  "ActivityQ" ;
+    dct:title "creation of test record cat:203026" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203026 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityR a prov:Activity ;
+    dct:identifier  "ActivityR" ;
+    dct:title "creation of test record cat:203027" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203027 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityS a prov:Activity ;
+    dct:identifier  "ActivityS" ;
+    dct:title "creation of test record cat:203028" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203028 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityT a prov:Activity ;
+    dct:identifier  "ActivityT" ;
+    dct:title "creation of test record cat:203029" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203029 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:ActivityU a prov:Activity ;
+    dct:identifier  "ActivityU" ;
+    dct:title "creation of test record cat:203030" ;
+    erar:exe  cat:ILBD2OmegaOHOSAI ;
+    erar:imp  cat:ValentinaVavassori ;
+    eror:out cat:203030 ;
+    prov:endedAtTime  "2023-03-16T17:00:00Z"^^xsd:dateTime ;
+    prov:startedAtTime"2023-03-13T11:53:00Z"^^xsd:dateTime .
+
+cat:203012.1 a premis:IntellectualEntity ;
+    dct:abstract "<scopecontent><p>Harry Potter and Hermione Granger  tried to reach the philosopher's stone</p></scopecontent>"^^rdf:XMLLiteral ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:identifier  "203012.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;    
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Agent "Hermione Granger";
+        rdf:Place "London";
+        rdf:Temporal "1902-01-12";
+    ];
+    prov:specialisationOf cat:203012 .
+
+cat:203013.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Harry Potter and Ron Weasley investigates Hermione's turning into stone</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;    
+    dct:type cat:item;
+    dct:identifier  "203013.1" ;
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Agent "Hermione Granger";
+        rdf:Agent "Ron Weasley";
+        rdf:Place "Glasgow";
+        rdf:Temporal "1909-01-12";
+    ];
+    prov:specialisationOf cat:203013 .
+
+cat:203014.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Harry Potter catched the golden snitch for the first time</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203014.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;    
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Place "Quidditch Pitch";
+        rdf:Temporal "Quidditch Tournament";
+    ];
+    prov:specialisationOf cat:203014 .
+
+cat:203015.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Hermione Granger  was nominated Prefect</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203015.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;    
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Hermione Granger";
+        rdf:Place "Hogwarts";
+        rdf:Temporal "Sorting Nomination";
+    ];
+    prov:specialisationOf cat:203015 .
+
+cat:203016.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Ron Weasley became a member of the Weasleys' Wizard Wheezes</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203016.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Ron Weasley";
+        rdf:Place "Hogwarts";
+        rdf:Temporal "1909-01-12";
+    ];
+    prov:specialisationOf cat:203016 .
+
+cat:203017.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>HARRY forgot to do his homework</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203017.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Place "Hogwarts";
+        rdf:Temporal "1902-11-14";
+    ];
+    prov:specialisationOf cat:203017 .
+
+cat:203018.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Hagrid is a bad cook</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203018.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Hagrid";
+        rdf:Place "Glasgow";
+    ];
+    prov:specialisationOf cat:203018 .
+
+cat:203019.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Hagrid really wanted a small dragon</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203019.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Hagrid";
+    ];
+    prov:specialisationOf cat:203019 .
+
+cat:203020.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Severus Snape hated Harry's father</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203020.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Agent "Severus Snape";
+        rdf:Agent "James Potter";
+    ];
+    prov:specialisationOf cat:203020 .
+
+cat:203021.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Harry Potter and Hermione Granger were part of the Golden Trio</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203021.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Agent "Hermione Granger";
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203021 .
+
+cat:203022.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Draco Malfoy insulted Hermione</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203022.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Draco Malfoy";
+        rdf:Agent "Hermione Granger";
+        rdf:Place "Hogwarts";
+        rdf:Temporal "1902-11-12";
+    ];
+    prov:specialisationOf cat:203022 .
+
+cat:203023.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>HARRY was pretty bad at Potions</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203023.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203023 .
+
+cat:203024.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Defence against the Dark Arts was harry's best subject</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203024.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203024 .
+
+cat:203124.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Defence against the Dark Arts was Ron's best subject</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203024.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Ron Weasley";
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203124 .
+
+cat:203224.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Defence against the Dark Arts was a subject at Hogwarts</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203024.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203224 .
+
+cat:203025.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Hermione thought Remus Lupin was an amazing teacher</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203025.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Remus Lupin";
+        rdf:Agent "Hermione Granger";
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203025 .
+
+cat:203026.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Hermione Granger was an amazing student</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203026.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Hermione Granger";
+        rdf:Place "Hogwarts";
+    ];
+    prov:specialisationOf cat:203026 .
+
+cat:203027.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Tom Riddle went at school with Hagrid</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203027.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Hagrid";
+        rdf:Agent "Tom Riddle";
+        rdf:Place "Hogwarts";
+        rdf:Temporal "1900-01-12";
+    ];
+    prov:specialisationOf cat:203027 .
+
+cat:203127.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Tom Riddle went at school with Hagrid in 1899</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203027.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Hagrid";
+        rdf:Agent "Tom Riddle";
+        rdf:Place "Hogwarts";
+        rdf:Temporal "1899-01-12";
+    ];
+    prov:specialisationOf cat:203127 .
+
+cat:203028.1 a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>HARRY was Voldemort's last Horcrux</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203028.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Harry Potter";
+        rdf:Agent "Voldemort";
+    ];
+    prov:specialisationOf cat:203028 .
+
+cat:203029.1  a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Albus Silente liked Hagrid</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203029.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Albus";
+        rdf:Agent "Hagrid";
+    ];
+    prov:specialisationOf cat:203029 .
+
+cat:203030.1  a premis:IntellectualEntity ;
+    cat:created                    [ a                  time:ProperInterval ;
+                                         dct:description    "1989 Jan 1 - 1990 Dec 31" ;
+                                         time:hasBeginning  [ a               time:Instant ;
+                                                              time:inXSDDate  "1989-01-01Z"^^xsd:date
+                                                            ] ;
+                                         time:hasEnd        [ a               time:Instant ;
+                                                              time:inXSDDate  "1990-12-31Z"^^xsd:date
+                                                            ]
+                                       ] ;
+    dct:abstract "<scopecontent><p>Ron Weasley really liked Quidditch</p></scopecontent>"^^rdf:XMLLiteral ;
+    dct:identifier  "203030.1" ;
+    dct:accessRights               [ a               dct:RightsStatement ;
+                                         odrl:hasPolicy  cat:policy.Open_Description , cat:policy.Open_on_Transfer_1990-12-31
+                                       ] ;
+    dct:accessRights               [ a                  cat:AccessConditions ;
+                                         cat:closureCode    0 ;
+                                         cat:closureStatus  "O" ;
+                                         cat:closureType    "A"
+                                       ] ;   
+    dct:type cat:item , cat:record-description ;
+    schema:mentionedEntity [
+        rdf:Agent "Ron Weasley";
+    ];
+    prov:specialisationOf cat:203030 .
+
+    cat:203012 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203012" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203012.1 .
+
+cat:203013 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203013" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203013.1 .
+
+cat:203014 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203014" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203014.1 .
+
+cat:203015 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203015" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203015.1 .
+
+cat:203016 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203016" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203016.1 .
+
+cat:203017 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203017" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:publicrecord-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203017.1 .
+
+cat:203018 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203018" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203018.1 .
+
+cat:203019 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203019" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203019.1 .
+
+cat:203020 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203020" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203020.1 .
+
+cat:203021 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203021" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203021.1 .
+
+cat:203022 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203022" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203022.1 .
+
+cat:203023 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203023" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203023.1 .
+
+cat:203024 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203024" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:publicrecord-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203024.1 .
+
+cat:203025 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203025" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203025.1 .
+
+cat:203026 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203026" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203026.1 .
+
+cat:203027 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203027" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203027.1 .
+
+cat:203028 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203028" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203028.1 .
+
+cat:203029 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203029" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203029.1 .
+
+cat:203030 a premis:IntellectualEntity  ;
+    dct:dateAccepted"2023-03-13T11:53:00Z"^^xsd:dateTime ;
+    dct:format <http://www.nationalarchives.gov.uk/ont.digital-record> ;
+    dct:identifier  "203030" ;
+    dct:type cat:record-concept ;
+    premis:rightStatus cat:public-record-status ;
+    prov:generatedAtTime "2023-03-13T11:53:00Z" ;
+    prov:wasAttributedTo cat:ValentinaVavassori ;
+    ver:currentVersion cat:203030.1 .
+
