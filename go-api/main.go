@@ -40,13 +40,7 @@ type ResultsCount struct {
 }
 
 type ResultsBindings struct {
-	Count resultsBindingCount
-}
-
-type resultsBindingCount struct {
-	Datatype string `json: datatype`
-	Type     string `json: type`
-	Value    string `json: value`
+	Count DatatypeTypeValue
 }
 
 //struct for results for title/topic/url/description in movingImages
@@ -60,22 +54,17 @@ type TitleTopicUrlDescriptionBindingStruct struct {
 }
 
 type BindingsTitleTopicUrlDescription struct {
-	Identifier  IdentifierReturnValues
-	Title       TitleTopicStructValues
-	Description TitleTopicStructValues
-	URL         URLReturnValues
-	Topics      TitleTopicStructValues
+	Identifier  TypeValeStruct
+	Title       TypeValeStruct
+	Description TypeValeStruct
+	URL         DatatypeTypeValue
+	Topics      TypeValeStruct
 }
 
-type URLReturnValues struct {
+type DatatypeTypeValue struct {
 	Datatype string `json:"datatype"`
 	Type     string `json:"type"`
 	Value    string `json:"value"`
-}
-
-type IdentifierReturnValues struct {
-	Type  string `json:"type"`
-	Value string `json:"value"`
 }
 
 // struct for results for title/topic search
@@ -90,11 +79,11 @@ type TitleTopicBindingsStruct struct {
 }
 
 type BindingsResultsTitleTopic struct {
-	Title  TitleTopicStructValues `json:"title"`
-	Topics TitleTopicStructValues `json:"topics"`
+	Title  TypeValeStruct `json:"title"`
+	Topics TypeValeStruct `json:"topics"`
 }
 
-type TitleTopicStructValues struct {
+type TypeValeStruct struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`
 }
@@ -180,12 +169,12 @@ type DiscoveryCodeCount struct {
 }
 
 // TODO this should have more than one return
-func buildMainSparqlQuery(keyword string, offset string) string {
+func buildMainSparqlQuery(keyword string, offset string, graph string) string {
 	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>select (?id as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url . ?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value ?id .} group by ?title ?id ?description ?url order by ?title  OFFSET " + offset + " limit 10"
 	return titleTopicURLDescription
 }
 
-func buildEntityMainSparqlQuery(id string) string {
+func buildEntityMainSparqlQuery(id string, graph string) string {
 	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ('" + id + "' as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value '" + id + "' .} group by ?title ?description ?url order by ?title OFFSET 0 limit 10"
 	return titleTopicURLDescription
 }
@@ -212,7 +201,7 @@ func helloResponse(welcome string) echo.HandlerFunc {
 // @Produce json
 // @Success 200
 // @Router /sparql [post]
-func requestToNeptune(neptuneurl string) echo.HandlerFunc {
+func requestToNeptune(neptuneurl, graph string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
 		sparqlString := c.FormValue("sparqlquery")
 
@@ -309,18 +298,16 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 // @Summary Moving images queries
 // @Description Moving images queries
 // @Tags MovingImages
-// @Param q query string true "string query"
-// @Param page query int true "int page"
+// @Param q query string false "string query"
+// @Param page query int false "int page"
 // @Produce json
 // @Success 200 {object} keywordReturnStruct
-// @Success 204
-// @Failure 400
 // @Failure 500
 // @Router /moving-images [get]
-func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerFunc {
+func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
 		//default params
-		keyword := "glasgow"
+		keyword := ""
 		pageKeyword := "1"
 		pageInt := 1
 		numberOfResults := 0
@@ -334,24 +321,24 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerF
 		_, qPresent := userProvidedParams["q"]
 		_, pagePresent := userProvidedParams["page"]
 
-		if len(userProvidedParams) != 2 {
-			return c.String(http.StatusBadRequest, "You need to provide both a keyword (as q) and a page number")
-		} else if !qPresent || !pagePresent {
-			return c.String(http.StatusBadRequest, "You need to provide a keyword as q and a page as page. q needs to be a string, page needs to be an int. Copy this example"+ec2url+" /api/"+movingImagesEndpoint+"?q=glasgow&page=1")
-		} else {
+		if qPresent {
 			keyword = userProvidedParams.Get("q")
-			pageKeyword = userProvidedParams.Get("page")
-			jsonToReturn.Id.Keyword = keyword
-			jsonToReturn.Id.Page = pageKeyword
 		}
 
+		if pagePresent {
+			pageKeyword = userProvidedParams.Get("page")
+		}
+
+		jsonToReturn.Id.Keyword = keyword
+		jsonToReturn.Id.Page = pageKeyword
+	
 		pageInt, err := strconv.Atoi(pageKeyword)
 		if err != nil {
 			return c.String(http.StatusBadRequest, "Page needs to be selected as a number")
 		}
 
 		if pageInt < 1 {
-			return c.String(http.StatusRequestedRangeNotSatisfiable, "If you are looking for the first page, please request page 1 (this is to align with the UI). If you are looking for page -1 or lower, those don't exist.")
+			pageInt = 1
 		}
 
 		off := max(1, pageInt)
@@ -403,10 +390,6 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerF
 			return c.String(http.StatusInternalServerError, "Something went wrong as the number of results isn't a number")
 		}
 
-		if numberOfResults < 1 {
-			return c.String(http.StatusNoContent, "The search worked, there just aren't any results") // No Content doesn't send a return string, which makes sense, as that'd be some content
-		}
-
 		maxPages := int(math.Ceil(float64(numberOfResults) / 10)) //odd way to do it, but that's what the linter did to it
 
 		//Now that we know the number of pages, we can fill in the various page options
@@ -428,7 +411,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerF
 
 		//Now, we do the actual query
 
-		mainSearchQuery := buildMainSparqlQuery(keyword, offset)
+		mainSearchQuery := buildMainSparqlQuery(keyword, offset, graph)
 
 		mainSearchParams := url.Values{}
 		mainSearchParams.Add("query", mainSearchQuery)
@@ -481,13 +464,13 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint string) echo.HandlerF
 // @Success 200 {object} EntityReturnStruct
 // @Failure 500
 // @Router /moving-images-ent/entity/{id} [get]
-func movingImagesEntity(neptuneurl string) echo.HandlerFunc {
+func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
 		var jsonToReturn EntityReturnStruct
 
 		id := c.Param("id")
 
-		mainSearchQuery := buildEntityMainSparqlQuery(id)
+		mainSearchQuery := buildEntityMainSparqlQuery(id, graph)
 
 		mainSearchParams := url.Values{}
 		mainSearchParams.Add("query", mainSearchQuery)
@@ -549,6 +532,7 @@ func main() {
 	neptunePort := os.Getenv("NEPTUNE_PORT")
 	discoveryAPIurl := os.Getenv("DISCOVERY_API")
 	movingImagesEndpoint := os.Getenv("MOVING_IMAGES_ENDPOINT")
+	graph := os.Getenv("GRAPH")
 
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
@@ -564,13 +548,13 @@ func main() {
 
 	e.GET("/", helloResponse(welcomeString))
 
-	e.POST("/sparql", requestToNeptune(neptuneFullSparqlUrl)) //to pass requests directly through
+	e.POST("/sparql", requestToNeptune(neptuneFullSparqlUrl, graph)) //to pass requests directly through
 
 	e.GET("/discovery", fetchDiscovery(discoveryAPIurl))
 
-	e.GET("/moving-images", movingImages(ec2fullurl, neptuneFullSparqlUrl, movingImagesEndpoint))
+	e.GET("/moving-images", movingImages(ec2fullurl, neptuneFullSparqlUrl, movingImagesEndpoint, graph))
 
-	e.GET("/moving-images-ent/entity/:id", movingImagesEntity(neptuneFullSparqlUrl))
+	e.GET("/moving-images-ent/entity/:id", movingImagesEntity(neptuneFullSparqlUrl, graph))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
