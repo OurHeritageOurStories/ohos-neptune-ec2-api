@@ -169,12 +169,12 @@ type DiscoveryCodeCount struct {
 }
 
 // TODO this should have more than one return
-func buildMainSparqlQuery(keyword string, offset string, env string) string {
+func buildMainSparqlQuery(keyword string, offset string, graph string) string {
 	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>select (?id as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title filter (regex(str(?title), '" + keyword + "', 'i')) .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url . ?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value ?id .} group by ?title ?id ?description ?url order by ?title  OFFSET " + offset + " limit 10"
 	return titleTopicURLDescription
 }
 
-func buildEntityMainSparqlQuery(id string, env string) string {
+func buildEntityMainSparqlQuery(id string, graph string) string {
 	titleTopicURLDescription := "prefix ns0: <http://id.loc.gov/ontologies/bibframe/> prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> prefix xsd: <http://www.w3.org/2001/XMLSchema#> prefix ns1: <http://id.loc.gov/ontologies/bflc/> prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> select ('" + id + "' as ?identifier) ?title ?url ?description (group_concat(?topic;separator=' ||| ')as ?topics) where {?s ns0:title _:title ._:title ns0:mainTitle ?title .?s ns0:summary _:summary ._:summary rdfs:label ?description .?s ns0:subject _:subject ._:subject rdfs:label ?topic .?s ns0:hasInstance ?t .?t ns0:hasItem ?r .?r ns0:electronicLocator _:url ._:url rdf:value ?url .?s ns0:adminMetadata _:adminData ._:adminData ns0:identifiedBy _:identifiedBy ._:identifiedBy rdf:value '" + id + "' .} group by ?title ?description ?url order by ?title OFFSET 0 limit 10"
 	return titleTopicURLDescription
 }
@@ -411,7 +411,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 
 		//Now, we do the actual query
 
-		mainSearchQuery := buildMainSparqlQuery(keyword, offset, env)
+		mainSearchQuery := buildMainSparqlQuery(keyword, offset, graph)
 
 		mainSearchParams := url.Values{}
 		mainSearchParams.Add("query", mainSearchQuery)
@@ -470,7 +470,7 @@ func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 
 		id := c.Param("id")
 
-		mainSearchQuery := buildEntityMainSparqlQuery(id, env)
+		mainSearchQuery := buildEntityMainSparqlQuery(id, graph)
 
 		mainSearchParams := url.Values{}
 		mainSearchParams.Add("query", mainSearchQuery)
