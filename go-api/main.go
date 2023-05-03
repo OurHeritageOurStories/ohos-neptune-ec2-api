@@ -201,7 +201,7 @@ func helloResponse(welcome string) echo.HandlerFunc {
 // @Produce json
 // @Success 200
 // @Router /sparql [post]
-func requestToNeptune(neptuneurl string, env string) echo.HandlerFunc {
+func requestToNeptune(neptuneurl, graph string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
 		sparqlString := c.FormValue("sparqlquery")
 
@@ -304,7 +304,7 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 // @Success 200 {object} keywordReturnStruct
 // @Failure 500
 // @Router /moving-images [get]
-func movingImages(ec2url, neptuneurl, movingImagesEndpoint string, env string) echo.HandlerFunc {
+func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
 		//default params
 		keyword := ""
@@ -464,7 +464,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint string, env string) e
 // @Success 200 {object} EntityReturnStruct
 // @Failure 500
 // @Router /moving-images-ent/entity/{id} [get]
-func movingImagesEntity(neptuneurl string, env string) echo.HandlerFunc {
+func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
 		var jsonToReturn EntityReturnStruct
 
@@ -532,7 +532,7 @@ func main() {
 	neptunePort := os.Getenv("NEPTUNE_PORT")
 	discoveryAPIurl := os.Getenv("DISCOVERY_API")
 	movingImagesEndpoint := os.Getenv("MOVING_IMAGES_ENDPOINT")
-	garph := os.Getenv("GRAPH")
+	graph := os.Getenv("GRAPH")
 
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
