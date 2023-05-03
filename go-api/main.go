@@ -532,7 +532,7 @@ func main() {
 	neptunePort := os.Getenv("NEPTUNE_PORT")
 	discoveryAPIurl := os.Getenv("DISCOVERY_API")
 	movingImagesEndpoint := os.Getenv("MOVING_IMAGES_ENDPOINT")
-	env := os.Getenv("ENV")
+	garph := os.Getenv("GRAPH")
 
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
@@ -548,13 +548,13 @@ func main() {
 
 	e.GET("/", helloResponse(welcomeString))
 
-	e.POST("/sparql", requestToNeptune(neptuneFullSparqlUrl, env)) //to pass requests directly through
+	e.POST("/sparql", requestToNeptune(neptuneFullSparqlUrl, graph)) //to pass requests directly through
 
 	e.GET("/discovery", fetchDiscovery(discoveryAPIurl))
 
-	e.GET("/moving-images", movingImages(ec2fullurl, neptuneFullSparqlUrl, movingImagesEndpoint, env))
+	e.GET("/moving-images", movingImages(ec2fullurl, neptuneFullSparqlUrl, movingImagesEndpoint, graph))
 
-	e.GET("/moving-images-ent/entity/:id", movingImagesEntity(neptuneFullSparqlUrl, env))
+	e.GET("/moving-images-ent/entity/:id", movingImagesEntity(neptuneFullSparqlUrl, graph))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
