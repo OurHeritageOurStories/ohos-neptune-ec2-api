@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	// "fmt"
 	"io/ioutil"
 	"log"
 	"math"
@@ -179,6 +179,14 @@ func buildEntityMainSparqlQuery(id string, graph string) string {
 	return titleTopicURLDescription
 }
 
+var internalServerErrorMessageDatabase = "Something went wrong while communicating with the database."
+
+var internalServerErrorMessageResponse = "Something went wrong while working with the response."
+
+var internalServerErrorMessageAPI = "Something went wrong while communicating with the API"
+
+var internalServerErrorMessage = "Something went wrong "
+
 // StatusCheck godoc
 // @Summary Test whether the API is running
 // @Description Test whether the api is running
@@ -188,7 +196,7 @@ func buildEntityMainSparqlQuery(id string, graph string) string {
 // @Router / [get]
 func helloResponse(welcome string) echo.HandlerFunc {
 	fn := func(c echo.Context) error {
-		return c.String(http.StatusOK, welcome)
+		return echo.NewHTTPError(http.StatusOK, welcome)
 	}
 	return echo.HandlerFunc(fn)
 }
@@ -208,13 +216,13 @@ func requestToNeptune(neptuneurl, graph string) echo.HandlerFunc {
 		limit := c.FormValue("limit")
 		limitInt, err := strconv.Atoi(limit)
 		if err != nil {
-			return c.String(http.StatusBadRequest, "Limit needs to be a number")
+			return echo.NewHTTPError(http.StatusBadRequest, "Limit needs to be a number")
 		}
 
 		maxLimit := os.Getenv("LIMIT")
 		maxLimitInt, err2 := strconv.Atoi(maxLimit)
 		if err2 != nil {
-			return c.String(http.StatusInternalServerError, "Max limit not a number")
+			return echo.NewHTTPError(http.StatusInternalServerError, "Max limit not a number")
 		}
 
 		var limitToUse int
@@ -276,11 +284,12 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 		response, err := http.Get("https://discovery.nationalarchives.gov.uk/API/search/records?sps.heldByCode=" + source + "&sps.searchQuery=" + keyword)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "receiving the request from the discovery API.")		}
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageAPI)
+		}
 
 		responseData, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the response from the API.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageAPI)
 		}
 
 		var jsonMap map[string]interface{}
@@ -336,7 +345,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 		}
 
 		if pageInt < 1 {
-			pageInt = 1
+			return echo.NewHTTPError(http.StatusBadRequest, "Page needs to be minimum 1")
 		}
 
 		off := max(1, pageInt)
@@ -356,7 +365,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "sending the request to the database.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageDatabase)
 		}
 
 		countReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -365,7 +374,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "getting the result from the database.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageDatabase)
 		}
 
 		// map the response to the "count" struct
@@ -375,17 +384,17 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 		countData, err := ioutil.ReadAll(countResp.Body)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the number of responses.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageResponse)
 		}
 
 		if err := json.Unmarshal(countData, &countStruct); err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "working with the number of responses")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageResponse)
 		}
 
 		numberOfResults, err = strconv.Atoi(countStruct.Results.Bindings[0].Count.Value)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "as the number of results isn't a number")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessage + "as the number of results isn't a number")
 		}
 
 		maxPages := int(math.Ceil(float64(numberOfResults) / 10)) //odd way to do it, but that's what the linter did to it
@@ -420,7 +429,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "sending the main request to the database.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageDatabase)
 		}
 
 		mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -429,7 +438,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "getting the main result from the database.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageDatabase)
 		}
 
 		// Map the main response to the struct
@@ -439,11 +448,11 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 		mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the main response.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageResponse)
 		}
 
 		if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "working with the main results.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageResponse)
 		}
 
 		jsonToReturn.Items = mainResultStruct.Results.Bindings
@@ -479,7 +488,7 @@ func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "sending the main request to the database.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageDatabase)
 		}
 
 		mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -488,7 +497,7 @@ func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "getting the main result from the database.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageDatabase)
 		}
 
 		// Map the main response to the struct
@@ -498,11 +507,11 @@ func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 		mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the main response.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageResponse)
 		}
 
 		if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
-			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "working with the main results.")
+			return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessageResponse)
 		}
 
 		jsonToReturn.Items = mainResultStruct.Results.Bindings
@@ -531,8 +540,6 @@ func main() {
 	discoveryAPIurl := os.Getenv("DISCOVERY_API")
 	movingImagesEndpoint := os.Getenv("MOVING_IMAGES_ENDPOINT")
 	graph := os.Getenv("GRAPH")
-
-	internalServerErrorMessage = "Something went wrong"
 
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
