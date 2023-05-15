@@ -230,7 +230,7 @@ func requestToNeptune(neptuneurl, graph string) echo.HandlerFunc {
 		params.Add("query", constructedQuery)
 		body := strings.NewReader(params.Encode())
 
-		req, err := http.NewRequest("POST", neptuneurl, body)
+		req, err := http.NewRequest("POST", "http://localhost:9999/bigdata/namespace/undefined/sparql", body)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -273,16 +273,14 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 			source = "ALL"
 		}
 
-		response, err := http.Get(discoveryapiurl + "records?sps.heldByCode=" + source + "&sps.searchQuery=" + keyword)
+		response, err := http.Get("https://discovery.nationalarchives.gov.uk/API/search/records?sps.heldByCode=" + source + "&sps.searchQuery=" + keyword)
 
 		if err != nil {
-			fmt.Print(err.Error())
-			os.Exit(1)
-		}
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "receiving the request from the discovery API.")		}
 
 		responseData, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			log.Fatal(err)
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the response from the API.")
 		}
 
 		var jsonMap map[string]interface{}
@@ -334,7 +332,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 	
 		pageInt, err := strconv.Atoi(pageKeyword)
 		if err != nil {
-			return c.String(http.StatusBadRequest, "Page needs to be selected as a number")
+			 return echo.NewHTTPError(http.StatusBadRequest, "Page needs to be selected as a number")
 		}
 
 		if pageInt < 1 {
@@ -354,11 +352,11 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 		countParams.Add("format", "json")
 		countBody := strings.NewReader(countParams.Encode())
 
-		countReq, err := http.NewRequest("POST", neptuneurl, countBody)
+		countReq, err := http.NewRequest("POST", "http://localhost:9999/bigdata/namespace/undefined/sparql", countBody)
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, "Something went wrong sending the request to the database.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "sending the request to the database.")
 		}
 
 		countReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -367,7 +365,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, "Something went wrong getting the result from the database.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "getting the result from the database.")
 		}
 
 		// map the response to the "count" struct
@@ -377,17 +375,17 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 		countData, err := ioutil.ReadAll(countResp.Body)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, "Something went wrong reading the number of responses.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the number of responses.")
 		}
 
 		if err := json.Unmarshal(countData, &countStruct); err != nil {
-			return c.String(http.StatusInternalServerError, "Something went wrong working with the number of responses")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "working with the number of responses")
 		}
 
 		numberOfResults, err = strconv.Atoi(countStruct.Results.Bindings[0].Count.Value)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, "Something went wrong as the number of results isn't a number")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "as the number of results isn't a number")
 		}
 
 		maxPages := int(math.Ceil(float64(numberOfResults) / 10)) //odd way to do it, but that's what the linter did to it
@@ -418,11 +416,11 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 		mainSearchParams.Add("format", "json")
 		mainSearchBody := strings.NewReader(mainSearchParams.Encode())
 
-		mainSearchReq, err := http.NewRequest("POST", neptuneurl, mainSearchBody)
+		mainSearchReq, err := http.NewRequest("POST", "http://localhost:9999/bigdata/namespace/undefined/sparql", mainSearchBody)
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, "Something went wrong sending the main request to the database.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "sending the main request to the database.")
 		}
 
 		mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -431,7 +429,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, "Something went wrong getting the main result from the database.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "getting the main result from the database.")
 		}
 
 		// Map the main response to the struct
@@ -441,11 +439,11 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph string) echo.H
 		mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, "Something went wrong reading the main response.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the main response.")
 		}
 
 		if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
-			return c.String(http.StatusInternalServerError, "Something went wrong working with the main results.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "working with the main results.")
 		}
 
 		jsonToReturn.Items = mainResultStruct.Results.Bindings
@@ -477,11 +475,11 @@ func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 		mainSearchParams.Add("format", "json")
 		mainSearchBody := strings.NewReader(mainSearchParams.Encode())
 
-		mainSearchReq, err := http.NewRequest("POST", neptuneurl, mainSearchBody)
+		mainSearchReq, err := http.NewRequest("POST", "http://localhost:9999/bigdata/namespace/undefined/sparql", mainSearchBody)
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, "Something went wrong sending the main request to the database.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "sending the main request to the database.")
 		}
 
 		mainSearchReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -490,7 +488,7 @@ func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 
 		if err != nil {
 			log.Fatal(err)
-			return c.String(http.StatusInternalServerError, "Something went wrong getting the main result from the database.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "getting the main result from the database.")
 		}
 
 		// Map the main response to the struct
@@ -500,11 +498,11 @@ func movingImagesEntity(neptuneurl, graph string) echo.HandlerFunc {
 		mainResultData, err := ioutil.ReadAll(mainSearchResp.Body)
 
 		if err != nil {
-			return c.String(http.StatusInternalServerError, "Something went wrong reading the main response.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "reading the main response.")
 		}
 
 		if err := json.Unmarshal(mainResultData, &mainResultStruct); err != nil {
-			return c.String(http.StatusInternalServerError, "Something went wrong working with the main results.")
+			return c.String(http.StatusInternalServerError, internalServerErrorMessage + "working with the main results.")
 		}
 
 		jsonToReturn.Items = mainResultStruct.Results.Bindings
@@ -533,6 +531,8 @@ func main() {
 	discoveryAPIurl := os.Getenv("DISCOVERY_API")
 	movingImagesEndpoint := os.Getenv("MOVING_IMAGES_ENDPOINT")
 	graph := os.Getenv("GRAPH")
+
+	internalServerErrorMessage = "Something went wrong"
 
 	neptuneFullSparqlUrl := neptuneUrl + ":" + neptunePort + "/sparql"
 	ec2fullurl := ec2url + ":" + ec2port
