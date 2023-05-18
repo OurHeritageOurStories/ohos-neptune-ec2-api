@@ -302,7 +302,7 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 	return echo.HandlerFunc(fn)
 }
 
-func structReturnJSON(keyword, pageKeyword string, numberOfResults, off, quantityInt int, ec2url, movingImagesEndpoint string) keywordReturnStruct {
+func structReturnJSON(keyword, pageKeyword string, numberOfResults, off, quantityInt int, ec2url, movingImagesEndpoint string, quantityPresent bool) keywordReturnStruct {
 		
 		var jsonToReturn keywordReturnStruct
 
@@ -324,7 +324,15 @@ func structReturnJSON(keyword, pageKeyword string, numberOfResults, off, quantit
 			jsonToReturn.Next = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(off+1)
 		}
 		jsonToReturn.Last = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
-		
+
+		if quantityPresent {
+			jsonToReturn.First = jsonToReturn.First + "&quantity=" + strconv.Itoa(quantityInt)
+			jsonToReturn.Prev = jsonToReturn.Prev + "&quantity=" + strconv.Itoa(quantityInt)
+			jsonToReturn.Prev = jsonToReturn.Prev + "&quantity=" + strconv.Itoa(quantityInt)
+			jsonToReturn.Next = jsonToReturn.Next + "&quantity=" + strconv.Itoa(quantityInt)
+			jsonToReturn.Next = jsonToReturn.Next + "&quantity=" + strconv.Itoa(quantityInt)
+			jsonToReturn.Last = jsonToReturn.Last + "&quantity=" + strconv.Itoa(quantityInt)
+		}
 		return jsonToReturn
 }
 
@@ -494,7 +502,7 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph, limit string,
 				return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessage + "as the number of results isn't a number")
 			}
 
-			var jsonToReturn = structReturnJSON(keyword, pageKeyword, numberOfResults, off, quantityInt, ec2url, movingImagesEndpoint)
+			var jsonToReturn = structReturnJSON(keyword, pageKeyword, numberOfResults, off, quantityInt, ec2url, movingImagesEndpoint, quantityPresent)
 		
 			jsonToReturn.Items = mainResultStruct.Results.Bindings
 		
