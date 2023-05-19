@@ -302,14 +302,12 @@ func fetchDiscovery(discoveryapiurl string) echo.HandlerFunc {
 	return echo.HandlerFunc(fn)
 }
 
-func structReturnJSON(keyword, pageKeyword string, numberOfResults, off, quantityInt int, ec2url, movingImagesEndpoint string, quantityPresent bool) keywordReturnStruct {
+func structReturnJSON(keyword, pageKeyword string, numberOfResults, off, maxPages, quantityInt int, ec2url, movingImagesEndpoint string, quantityPresent bool) keywordReturnStruct {
 		
 		var jsonToReturn keywordReturnStruct
 
 		jsonToReturn.Id.Keyword = keyword
 		jsonToReturn.Id.Page = pageKeyword
-
-		maxPages := int(math.Ceil(float64(numberOfResults) / float64(quantityInt)))
 
 		jsonToReturn.Total = numberOfResults
 		jsonToReturn.First = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=1"
@@ -318,7 +316,7 @@ func structReturnJSON(keyword, pageKeyword string, numberOfResults, off, quantit
 		} else {
 			jsonToReturn.Prev = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(off-1)
 		}
-		if off == maxPages {
+		if off >= maxPages {
 			jsonToReturn.Next = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(maxPages)
 		} else {
 			jsonToReturn.Next = ec2url + "/api/" + movingImagesEndpoint + "?q=" + keyword + "&page=" + strconv.Itoa(off+1)
@@ -328,8 +326,6 @@ func structReturnJSON(keyword, pageKeyword string, numberOfResults, off, quantit
 		if quantityPresent {
 			jsonToReturn.First = jsonToReturn.First + "&quantity=" + strconv.Itoa(quantityInt)
 			jsonToReturn.Prev = jsonToReturn.Prev + "&quantity=" + strconv.Itoa(quantityInt)
-			jsonToReturn.Prev = jsonToReturn.Prev + "&quantity=" + strconv.Itoa(quantityInt)
-			jsonToReturn.Next = jsonToReturn.Next + "&quantity=" + strconv.Itoa(quantityInt)
 			jsonToReturn.Next = jsonToReturn.Next + "&quantity=" + strconv.Itoa(quantityInt)
 			jsonToReturn.Last = jsonToReturn.Last + "&quantity=" + strconv.Itoa(quantityInt)
 		}
@@ -502,7 +498,15 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph, limit string,
 				return echo.NewHTTPError(http.StatusInternalServerError, internalServerErrorMessage + "as the number of results isn't a number")
 			}
 
-			var jsonToReturn = structReturnJSON(keyword, pageKeyword, numberOfResults, off, quantityInt, ec2url, movingImagesEndpoint, quantityPresent)
+			maxPages := int(math.Ceil(float64(numberOfResults) / float64(quantityInt)))
+
+			maxPages = max(1, maxPages)
+
+			if pageInt > maxPages {
+				return echo.NewHTTPError(http.StatusBadRequest, "Page is beyond the size of the result.")
+			}
+
+			var jsonToReturn = structReturnJSON(keyword, pageKeyword, numberOfResults, off, maxPages, quantityInt, ec2url, movingImagesEndpoint, quantityPresent)
 		
 			jsonToReturn.Items = mainResultStruct.Results.Bindings
 		
