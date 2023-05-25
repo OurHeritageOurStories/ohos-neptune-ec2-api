@@ -375,27 +375,34 @@ func movingImages(ec2url, neptuneurl, movingImagesEndpoint, graph, limit string,
 		limitInt, _ := strconv.Atoi(limit)
 		
 		if quantityPresent {
+			//If API have the quantity param, extract it and convert to string
 			quantity := userProvidedParams.Get("quantity")
 			quantityIn, err := strconv.Atoi(quantity)
 			if err != nil {
 				 return echo.NewHTTPError(http.StatusBadRequest, "Quantity needs to be selected as a number")
 			}
+			
 			if quantityIn < 1 {
 				if apiCall {
+					//For API JSON, if the quantity is not legal than put it the default page size (10)
 					quantityIn = quantityInt
 				} else {
+					//For download, if the quantity is not legal than put it the limit
 					quantityIn = limitInt
 				}
 			}
 
 			if quantityIn > limitInt {
+				//if the quantity is more than limit, put it as limit
 				quantityIn = limitInt
 			}
 			quantityInt = quantityIn
 		} else {
 			if apiCall {
+				//If no qauntity present then the quantity is defaukt value for api json
 				quantityInt = quantityInt
 			} else {
+				//If no qauntity present then the quantity is limit for download 
 				quantityInt = limitInt
 			}
 		}
