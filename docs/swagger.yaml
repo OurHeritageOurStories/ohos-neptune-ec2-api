@@ -283,6 +283,508 @@ paths:
       summary: Moving images queries
       tags:
       - MovingImages
+   
+  /archives/:
+    get:
+      description: archives queries
+      parameters:
+      - description: string archive
+        in: query
+        name: archive
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive agent
+        in: query
+        name: archive-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive place
+        in: query
+        name: archive-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive event
+        in: query
+        name: archive-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive object
+        in: query
+        name: archive-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection
+        in: query
+        name: collection
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection agent
+        in: query
+        name: collection-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection place
+        in: query
+        name: collection-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection event
+        in: query
+        name: collection-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection object
+        in: query
+        name: collection-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document
+        in: query
+        name: document
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document agent
+        in: query
+        name: document-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document place
+        in: query
+        name: document-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document event
+        in: query
+        name: document-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document object
+        in: query
+        name: document-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.keywordReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: archive queries
+      tags:
+      - archive
+
+  /archives/{id}:
+    get:
+      description: archives queries
+      parameters:
+      - description: string id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.keywordReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: archive queries
+      tags:
+      - archive
+
+  /collections/{id}:
+    get:
+      description: collections queries
+      parameters:
+      - description: string id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.keywordReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: collection queries
+      tags:
+      - collection
+
+  /collections/:
+    get:
+      description: collections queries
+      parameters:
+      - description: string archive
+        in: query
+        name: archive
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive agent
+        in: query
+        name: archive-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive place
+        in: query
+        name: archive-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive event
+        in: query
+        name: archive-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive object
+        in: query
+        name: archive-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection
+        in: query
+        name: collection
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection agent
+        in: query
+        name: collection-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection place
+        in: query
+        name: collection-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection event
+        in: query
+        name: collection-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection object
+        in: query
+        name: collection-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document
+        in: query
+        name: document
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document agent
+        in: query
+        name: document-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document place
+        in: query
+        name: document-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document event
+        in: query
+        name: document-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document object
+        in: query
+        name: document-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.keywordReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: collection queries
+      tags:
+      - collection
+
+  /documents/:
+    get:
+      description: documents queries
+      parameters:
+      - description: string archive
+        in: query
+        name: archive
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive agent
+        in: query
+        name: archive-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive place
+        in: query
+        name: archive-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive event
+        in: query
+        name: archive-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string archive object
+        in: query
+        name: archive-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection
+        in: query
+        name: collection
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection agent
+        in: query
+        name: collection-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection place
+        in: query
+        name: collection-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection event
+        in: query
+        name: collection-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string collection object
+        in: query
+        name: collection-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document
+        in: query
+        name: document
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document agent
+        in: query
+        name: document-agent
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document place
+        in: query
+        name: document-place
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document event
+        in: query
+        name: document-event
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      - description: string document object
+        in: query
+        name: document-object
+        required: false
+        schema:
+          type: array
+          items:
+            types: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.keywordReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: document queries
+      tags:
+      - document
+
+  /documents/{id}:
+    get:
+      description: documents queries
+      parameters:
+      - description: string id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.keywordReturnStruct'
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: document queries
+      tags:
+      - document
+
   /moving-images-ent/entity/{id}:
     get:
       description: Moving images get specific entity query
