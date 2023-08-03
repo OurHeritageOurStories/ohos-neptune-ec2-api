@@ -37,3 +37,10 @@ services:
     container_name: frontend
     ports:
       - 3000
+
+  dashui:
+    image: public.ecr.aws/j8z6n5u1/ohos-dash-ui
+    hostname: dashui
+    container_name: dashui
+    ports:
+      - 8050:8050
